@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp1
+﻿namespace ConsoleApp1.Domain
 {
    public sealed class PackageStatus : Enumeration<PackageStatus, string>
    {

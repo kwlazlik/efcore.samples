@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace ConsoleApp1
+namespace ConsoleApp1.EntityFramework
 {
    public static class QueryableExtensions
    {

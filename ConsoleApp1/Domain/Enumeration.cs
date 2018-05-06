@@ -1,12 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace ConsoleApp1.Domain
 {
    [Serializable]
    [DebuggerDisplay("{Value}:{DisplayName}")]
@@ -36,39 +32,18 @@ namespace ConsoleApp1
 
       public string DisplayName { get; }
 
-      public static IEnumerable<TEnumeration> GetAll()
-      {
-         return Enumerations;
-      }
+      public static IEnumerable<TEnumeration> GetAll() => Enumerations;
 
-      public int CompareTo(TEnumeration other)
-      {
-         return Value.CompareTo(other.Value);
-      }
+      public int CompareTo(TEnumeration other) => Value.CompareTo(other.Value);
 
-      public sealed override string ToString()
-      {
-         return DisplayName;
-      }
+      public sealed override string ToString() => DisplayName;
 
-      public override bool Equals(object obj)
-      {
-         return Equals(obj as TEnumeration);
-      }
+      public override bool Equals(object obj) => Equals(obj as TEnumeration);
 
-      public bool Equals(TEnumeration other)
-      {
-         return other != null && Value.Equals(other.Value);
-      }
+      public bool Equals(TEnumeration other) => other != null && Value.Equals(other.Value);
 
-      public override int GetHashCode()
-      {
-         return Value.GetHashCode() ^ DisplayName.GetHashCode() ^ GetType().GetHashCode();
-      }
+      public override int GetHashCode() => Value.GetHashCode() ^ DisplayName.GetHashCode() ^ GetType().GetHashCode();
 
-      public int CompareTo(object obj)
-      {
-         return CompareTo((TEnumeration)obj);
-      }
+      public int CompareTo(object obj) => CompareTo((TEnumeration)obj);
    }
 }
