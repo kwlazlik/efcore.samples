@@ -1,5 +1,10 @@
+using System.Collections.Generic;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using ConsoleApp1.EntityFramework;
 using ConsoleApp2.Domain;
 using ConsoleApp2.EntityFramework;
+using DelegateDecompiler;
 
 namespace ConsoleApp2   
 {
@@ -12,24 +17,31 @@ namespace ConsoleApp2
    {
       private static void Main(string[] args)
       {
-         var package1 = Package.Create(new PackageNumber("123"), PackageStatus.New);
-         var package2 = Package.Create(new PackageNumber("123"), PackageStatus.New);
+         Package package1 = Package.Create(new PackageNumber("123"), PackageStatus.New);
+         Package package2 = Package.Create(new PackageNumber("123"), PackageStatus.New);
 
-         using (var context = new Context())
+         using (Context context = new Context())
          {
             context.Add(package1);
             context.Add(package2);
             context.SaveChanges();
          }
-//
-//         using (var context = new Context())
-//         {
-//            //            var packages = context.Packages.Where(p => p.Status.Equals(PackageStatus.Sent)).ToList();
-//            //            var packages2Sql = context.Packages.Where(p => Equals(p.Status, PackageStatus.Sent)).ToSql();
-//            //            var packages2Sql2 = context.Packages.Where(p => p.Status == PackageStatus.Sent.Value).ToSql();
-//            //            var packages2Sql22 = context.Packages.Where(p => p.Status.Value == PackageStatus.Sent.Value).ToSql();
-//            //            var packages2Sql222 = context.Packages.Where(p => p.Status.Equals(PackageStatus.Sent)).ToSql();
-//         }
+
+         AutoMapper.Mapper.Initialize(x => x.CreateMap<Package, PackageDto>());
+
+         using (Context context = new Context())
+         {
+            //string packages2Sql = context.Packages.Where(p => Equals(p.Status, PackageStatus.Sent)).ToSql();
+            //string packages2Sql2 = context.Packages.Where(p => p.Status == PackageStatus.Sent.Value).ToSql();
+            //string packages2Sql222 = context.Packages.Where(p => p.Status.Equals(PackageStatus.Sent)).ToSql();
+
+//            string packages2Sql22 = context.Packages.Where(p => p.Status.Value == PackageStatus.New).ToSql();
+//            List<Package> packages = context.Packages.Where(p => p.Status.Value == PackageStatus.New.Value).ToList();
+//            List<Package> packages2 = context.Packages.Where(p => p.Status.Value.Equals(PackageStatus.New.Value)).ToList();
+
+            List<Package> packages3 = context.Packages.Where(p => p.Status.Value.Equals(PackageStatus.New.Value)).Decompile().ToList();
+            List<PackageDto> packages4 = context.Packages.Where(p => p.NumberStatus == "123new").ProjectTo<PackageDto>().Decompile().ToList();
+         }
 
 //         Box box1 = Box.New("123456789012").Value;
 //         Box box2 = Box.New("000000000000").Value;
@@ -41,7 +53,6 @@ namespace ConsoleApp2
 //            c.SaveChanges();
 //         }
 //
-//         AutoMapper.Mapper.Initialize(x => x.CreateMap<Box, BoxDto>());
 
 //         using (Context c = new Context())
 //         {

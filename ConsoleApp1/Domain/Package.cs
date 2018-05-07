@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DelegateDecompiler;
 
 namespace ConsoleApp2.Domain
 {
@@ -11,6 +12,8 @@ namespace ConsoleApp2.Domain
       public PackageStatus Status { get; private set; }
 
       public IReadOnlyList<PackageDocumentationTypeInfo> DocumentationTypeInfos => _documentationTypeInfos;
+
+      [Computed] public string NumberStatus => Number.Value + Status.Value;
 
       public void Send(PackageNumber number)
       {

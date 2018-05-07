@@ -10,5 +10,7 @@ namespace ConsoleApp2.Domain
       private PackageStatus(string value) : base(value) { }
 
       private PackageStatus(string value, string displayName) : base(value.ToLowerInvariant(), displayName) { }
+
+      public static implicit operator string(PackageStatus packageStatus) => packageStatus.Value;
    }
 }

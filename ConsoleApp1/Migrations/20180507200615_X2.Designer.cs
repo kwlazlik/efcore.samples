@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConsoleApp2.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20180507181137_First")]
-    partial class First
+    [Migration("20180507200615_X2")]
+    partial class X2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -92,7 +92,8 @@ namespace ConsoleApp2.Migrations
                                 .ValueGeneratedOnAdd()
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                            b1.Property<string>("Value");
+                            b1.Property<string>("Value")
+                                .IsRequired();
 
                             b1.ToTable("Packages");
 

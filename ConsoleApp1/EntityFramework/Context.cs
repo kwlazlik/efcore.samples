@@ -17,7 +17,8 @@ namespace ConsoleApp2.EntityFramework
          optionsBuilder
             .UseSqlServer(@"Server=komputerek\sqlexpress;Database=testdb;Trusted_Connection=True;")
             .ConfigureWarnings(wcb => wcb.Throw(RelationalEventId.QueryClientEvaluationWarning))
-            .EnableSensitiveDataLogging(true);
+            .EnableSensitiveDataLogging()
+            ;
       }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,7 +27,8 @@ namespace ConsoleApp2.EntityFramework
 
          modelBuilder.Entity<Package>(etb =>
          {
-            etb.OwnsOne(x => x.Status).Property(ps => ps.Value);
+            etb.Ignore(p => p.NumberStatus);
+            etb.OwnsOne(x => x.Status).Property(ps => ps.Value).IsRequired();
             etb.OwnsOne(p => p.Number).Property(pn => pn.Value);
          });
 

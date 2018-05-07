@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ConsoleApp2.Migrations
 {
-    public partial class First : Migration
+    public partial class X : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
