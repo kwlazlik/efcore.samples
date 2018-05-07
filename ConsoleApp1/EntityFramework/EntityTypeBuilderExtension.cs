@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ConsoleApp1.EntityFramework
+namespace ConsoleApp2.EntityFramework
 {
    public static class EntityTypeBuilderExtension
    {

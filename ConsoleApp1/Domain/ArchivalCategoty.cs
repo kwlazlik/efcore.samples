@@ -1,4 +1,4 @@
-namespace ConsoleApp1.Domain
+namespace ConsoleApp2.Domain
 {
    public class ArchivalCategoty : Entity<ArchivalCategoty>
    {

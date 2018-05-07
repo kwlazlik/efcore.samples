@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ConsoleApp1.Domain
+namespace ConsoleApp2.Domain
 {
    public class BoxDocumentationTypeInfo : DocumentationTypeInfo<BoxDocumentationTypeInfo>
    {

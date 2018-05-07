@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ConsoleApp1.Domain
+namespace ConsoleApp2.Domain
 {
    public class Package : Entity<Package>
    {
@@ -23,9 +23,10 @@ namespace ConsoleApp1.Domain
          _documentationTypeInfos.Add(info);
       }
 
-      public static Package New() => new Package
+      public static Package Create(PackageNumber number, PackageStatus status) => new Package
       {
-         Status = PackageStatus.New
+         Number = number,
+         Status = status
       };
    }
 }

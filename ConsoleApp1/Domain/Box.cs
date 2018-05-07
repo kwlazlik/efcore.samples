@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ConsoleApp1.Domain
+namespace ConsoleApp2.Domain
 {
    public class Box : Entity<Box>
    {
@@ -14,29 +14,14 @@ namespace ConsoleApp1.Domain
 
       public IReadOnlyList<BoxDocumentationTypeInfo> DocumentationTypeInfos => _documentationTypeInfos;
 
-      public static Result<Box> New(string cid)
-      {
-         Box box = new Box
-         {
-            Status = BoxStatus.New
-         };
-         Result result = box.UpdateCid(cid);
-         if (result)
-            return Result.Ok(box);
-         else
-            return Result.Fail<Box>(result.Error);
-      }
-
       public Result UpdateCid(string cid)
       {
-         Result<CidNumber> cidNumberResult = CidNumber.New(cid);
+         return CidNumber.Create(cid).OnSuccess(cn => Cid = cn);
+      }
 
-         if (cidNumberResult)
-         {
-            Cid = cidNumberResult.Value;
-         }
-
-         return cidNumberResult;
+      public void UpdateCid(CidNumber cid)
+      {
+         Cid = cid;
       }
 
       public void AddDocumentationTypeInfo(BoxDocumentationTypeInfo info)
@@ -44,17 +29,29 @@ namespace ConsoleApp1.Domain
          _documentationTypeInfos.Add(info);
       }
 
+      public static Box Create(CidNumber cid, BoxStatus status)
+      {
+         return new Box
+         {
+            Cid = cid,
+            Status = status
+         };
+      }
+
+      public static Result<Box> Create(string cid, BoxStatus status)
+      {
+         Box box = new Box
+         {
+            Status = status
+         };
+
+         Result<CidNumber> cidNumbeResult = CidNumber.Create(cid);
+
+         return cidNumbeResult.OnSuccess(cn =>
+         {
+            box.UpdateCid(cn);
+            return box;
+         });
+      }
    }
-
-
-   public sealed class BoxStatus : Enumeration<BoxStatus, string>
-   {
-      public static BoxStatus New { get; } = new BoxStatus("New", "Nowy");
-      public static BoxStatus Received { get; } = new BoxStatus("InUse", "Używany");
-
-      private BoxStatus(string value) : base(value) { }
-
-      private BoxStatus(string value, string displayName) : base(value, displayName) { }
-   }
-
 }

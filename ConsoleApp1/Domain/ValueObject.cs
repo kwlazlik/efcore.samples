@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace ConsoleApp1.Domain
+namespace ConsoleApp2.Domain
 {
    public abstract class ValueObject<T> : IEquatable<T> where T : ValueObject<T>
    {

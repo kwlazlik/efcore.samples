@@ -1,6 +1,6 @@
 using System;
 
-namespace ConsoleApp1.Domain
+namespace ConsoleApp2.Domain
 {
    public abstract class Entity<TEntity> : Entity<TEntity, int> where TEntity : Entity<TEntity, int> { }
 
@@ -8,7 +8,7 @@ namespace ConsoleApp1.Domain
    {
       private int? _hashCode;
 
-      public TKey Id { get; set; }
+      public TKey Id { get; private set; }
 
       public bool Equals(TEntity other) =>
          other != null && (Equals(other.Id, default(TKey)) && Equals(Id, default(TKey)) ? ReferenceEquals(other, this) : other.Id.Equals(Id));

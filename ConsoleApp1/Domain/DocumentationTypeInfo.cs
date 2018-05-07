@@ -1,6 +1,6 @@
 using System;
 
-namespace ConsoleApp1.Domain
+namespace ConsoleApp2.Domain
 {
    public abstract class DocumentationTypeInfo<TEntity> : Entity<TEntity> where TEntity : Entity<TEntity, int>
    {

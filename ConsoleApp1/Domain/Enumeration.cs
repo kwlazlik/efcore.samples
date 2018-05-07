@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 
-namespace ConsoleApp1.Domain
+namespace ConsoleApp2.Domain
 {
    [Serializable]
    [DebuggerDisplay("{Value}:{DisplayName}")]
@@ -10,8 +12,18 @@ namespace ConsoleApp1.Domain
          where TEnumeration : Enumeration<TEnumeration, TValue>
          where TValue : IComparable<TValue>, IEquatable<TValue>
    {
-      private static readonly Dictionary<TValue, string> ValuesToDisplayNames = new Dictionary<TValue, string>();
-      private static readonly List<TEnumeration> Enumerations = new List<TEnumeration>();
+      private static readonly Dictionary<TValue, string> ValuesToDisplayNames = typeof(TEnumeration)
+         .GetProperties(BindingFlags.Public | BindingFlags.Static)
+         .Select(pi => pi.GetValue(null))
+         .OfType<TEnumeration>()
+         .ToDictionary(e => e.Value, e => e.DisplayName);
+
+      private static readonly List<TEnumeration> Enumerations = typeof(TEnumeration)
+         .GetProperties(BindingFlags.Public | BindingFlags.Static)
+         .Select(pi => pi.GetValue(null))
+         .OfType<TEnumeration>()
+         .ToList();
+
 
       protected Enumeration(TValue value)
       {
@@ -23,20 +35,19 @@ namespace ConsoleApp1.Domain
       {
          Value = value;
          DisplayName = displayName;
-
-         ValuesToDisplayNames.Add(Value, DisplayName);
-         Enumerations.Add((TEnumeration)this);
       }
+
 
       public TValue Value { get; }
 
       public string DisplayName { get; }
 
-      public static IEnumerable<TEnumeration> GetAll() => Enumerations;
+      public static IReadOnlyCollection<TEnumeration> All => Enumerations;
+
 
       public int CompareTo(TEnumeration other) => Value.CompareTo(other.Value);
 
-      public sealed override string ToString() => DisplayName;
+      public override string ToString() => DisplayName;
 
       public override bool Equals(object obj) => Equals(obj as TEnumeration);
 
@@ -45,5 +56,9 @@ namespace ConsoleApp1.Domain
       public override int GetHashCode() => Value.GetHashCode() ^ DisplayName.GetHashCode() ^ GetType().GetHashCode();
 
       public int CompareTo(object obj) => CompareTo((TEnumeration)obj);
+
+      public static bool operator ==(TEnumeration left, Enumeration<TEnumeration, TValue> right) => left != null && left.Equals(right as TEnumeration);
+
+      public static bool operator !=(TEnumeration left, Enumeration<TEnumeration, TValue> right) => !(left == right);
    }
 }

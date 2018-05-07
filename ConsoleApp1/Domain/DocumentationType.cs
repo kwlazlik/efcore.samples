@@ -1,11 +1,10 @@
-namespace ConsoleApp1.Domain
+namespace ConsoleApp2.Domain
 {
    public class DocumentationType : Entity<DocumentationType>
    {
       private DocumentationType(string name)
       {
          Name = name;
-
       }
 
       public DocumentationType(string name, ArchivalCategoty archivalCategory) : this(name)
@@ -13,8 +12,8 @@ namespace ConsoleApp1.Domain
          ArchivalCategory = archivalCategory;
       }
 
-      public string Name { get; private set; }
+      public string Name { get; }
 
-      public ArchivalCategoty ArchivalCategory { get; private set; }
+      public ArchivalCategoty ArchivalCategory { get; }
    }
 }

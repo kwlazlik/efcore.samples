@@ -1,9 +1,7 @@
-using System.Linq;
-using AutoMapper.QueryableExtensions;
-using ConsoleApp1.Domain;
-using ConsoleApp1.EntityFramework;
+using ConsoleApp2.Domain;
+using ConsoleApp2.EntityFramework;
 
-namespace ConsoleApp1   
+namespace ConsoleApp2   
 {
    public class BoxDto
    {
@@ -14,15 +12,13 @@ namespace ConsoleApp1
    {
       private static void Main(string[] args)
       {
-         var package1 = Package.New();
-
-         var package2 = Package.New();
-         package2.Send(new PackageNumber("numer paczki 2"));
+         var package1 = Package.Create(new PackageNumber("123"), PackageStatus.New);
+         var package2 = Package.Create(new PackageNumber("123"), PackageStatus.New);
 
          using (var context = new Context())
          {
             context.Add(package1);
-           // context.Add(package2);
+            context.Add(package2);
             context.SaveChanges();
          }
 //
@@ -35,26 +31,26 @@ namespace ConsoleApp1
 //            //            var packages2Sql222 = context.Packages.Where(p => p.Status.Equals(PackageStatus.Sent)).ToSql();
 //         }
 
-         Box box1 = Box.New("123456789012").Value;
-         Box box2 = Box.New("000000000000").Value;
+//         Box box1 = Box.New("123456789012").Value;
+//         Box box2 = Box.New("000000000000").Value;
+//
+//         using (Context c = new Context())
+//         {
+//            c.Add(box1);
+//            c.Add(box2);
+//            c.SaveChanges();
+//         }
+//
+//         AutoMapper.Mapper.Initialize(x => x.CreateMap<Box, BoxDto>());
 
-         using (Context c = new Context())
-         {
-            c.Add(box1);
-            c.Add(box2);
-            c.SaveChanges();
-         }
-
-         AutoMapper.Mapper.Initialize(x => x.CreateMap<Box, BoxDto>());
-
-         using (Context c = new Context())
-         {
-            string s = c.Boxes.Where(b => b.Cid.Value == "000000000000").ToSql();
-            string s1 = c.Boxes.Where(b => b.Cid.Value == "000000000000").ProjectTo<BoxDto>().ToSql();
-
-            var a = c.Boxes.Where(b => b.Cid.Value == "000000000000").ToList();
-            var a1 = c.Boxes.Where(b => b.Cid.Value == "000000000000").ProjectTo<BoxDto>().ToList();
-         }
+//         using (Context c = new Context())
+//         {
+//           // string s = c.Boxes.Where(b => b.Cid.Value == "000000000000").ToSql();
+//           // string s1 = c.Boxes.Where(b => b.Cid.Value == "000000000000").ProjectTo<BoxDto>().ToSql();
+//
+//            var a = c.Boxes.Where(b => b.Cid.Value == "000000000000").ToList();
+//            var a1 = c.Boxes.Where(b => b.Cid.Value == "000000000000").ProjectTo<BoxDto>().ToList();
+//         }
       }
    }
 }

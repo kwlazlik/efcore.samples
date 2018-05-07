@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ConsoleApp1.Domain
+namespace ConsoleApp2.Domain
 {
    [Serializable]
    public struct Result
@@ -23,35 +23,18 @@ namespace ConsoleApp1.Domain
 
       public static bool operator false(Result result) => result.IsFail;
 
-      public static Result Ok()
-      {
-         return new Result();
-      }
+      public static Result Ok() => new Result();
 
-      public static Result Fail(string error)
-      {
-         return new Result(error);
-      }
+      public static Result Fail(string error) => new Result(error);
 
-      public static Result<TValue> Ok<TValue>(TValue value)
-      {
-         return new Result<TValue>(value);
-      }
+      public static Result<TValue> Ok<TValue>(TValue value) => new Result<TValue>(value);
 
-      public static Result<TValue> Fail<TValue>(string error)
-      {
-         return new Result<TValue>(default, error);
-      }
+      public static Result<TValue> Fail<TValue>(string error) => new Result<TValue>(default, error);
 
-      public static Result<TValue, TError> Ok<TValue, TError>(TValue value) where TError : class
-      {
-         return new Result<TValue, TError>(value);
-      }
+      public static Result<TValue, TError> Ok<TValue, TError>(TValue value) where TError : class => new Result<TValue, TError>(value);
 
-      public static Result<TValue, TError> Fail<TValue, TError>(TError error) where TError : class
-      {
-         return new Result<TValue, TError>(default, error);
-      }
+      public static Result<TValue, TError> Fail<TValue, TError>(TError error) where TError : class => new Result<TValue, TError>(default, error);
+
 
       public static Result Combine(params Result[] results)
       {
@@ -70,7 +53,7 @@ namespace ConsoleApp1.Domain
          if (!failedResults.Any())
             return Ok();
 
-         string errorMessage = string.Join(errorMessagesSeparator, failedResults.Select(x => x.Error).ToArray());
+         string errorMessage = string.Join(errorMessagesSeparator, failedResults.Select(x => x.Error));
          return Fail(errorMessage);
       }
 
@@ -115,15 +98,9 @@ namespace ConsoleApp1.Domain
 
       public static bool operator false(Result<TValue> result) => result.IsFail;
 
-      public static implicit operator Result(Result<TValue> result)
-      {
-         return result.IsOk ? Result.Ok() : Result.Fail(result.Error);
-      }
+      public static implicit operator Result(Result<TValue> result) => result ? Result.Ok() : Result.Fail(result.Error);
 
-      public static implicit operator Result<TValue, string>(Result<TValue> self)
-      {
-         return self.IsOk ? Result.Ok<TValue, string>(self.Value) : Result.Fail<TValue, string>(self.Error);
-      }
+      public static implicit operator Result<TValue, string>(Result<TValue> self) => self ? Result.Ok<TValue, string>(self.Value) : Result.Fail<TValue, string>(self.Error);
    }
 
 
@@ -163,12 +140,12 @@ namespace ConsoleApp1.Domain
 
       public static implicit operator Result(Result<TValue, TError> result)
       {
-         return result.IsOk ? Result.Ok() : Result.Fail(result.Error.ToString());
+         return result ? Result.Ok() : Result.Fail(result.Error.ToString());
       }
 
       public static implicit operator Result<TValue>(Result<TValue, TError> result)
       {
-         return result.IsOk ? Result.Ok(result.Value) : Result.Fail<TValue>(result.Error.ToString());
+         return result ? Result.Ok(result.Value) : Result.Fail<TValue>(result.Error.ToString());
       }
    }
 }
