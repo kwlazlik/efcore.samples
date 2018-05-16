@@ -2,12 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using ConsoleApp1.EntityFramework;
-using ConsoleApp2.Domain;
-using ConsoleApp2.EntityFramework;
 using DelegateDecompiler;
+using Domain;
+using EF;
 
-namespace ConsoleApp2   
+namespace TestProject   
 {
    public class BoxDto
    {

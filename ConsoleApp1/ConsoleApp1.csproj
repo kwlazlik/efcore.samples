@@ -49,36 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\ArchivalCategoty.cs" />
-    <Compile Include="Domain\Box.cs" />
-    <Compile Include="Domain\BoxDocumentationTypeInfo.cs" />
-    <Compile Include="Domain\BoxStatus.cs" />
-    <Compile Include="Domain\CidNumber.cs" />
-    <Compile Include="Domain\DocumentationType.cs" />
-    <Compile Include="Domain\DocumentationTypeInfo.cs" />
-    <Compile Include="Domain\Entity.cs" />
-    <Compile Include="Domain\Enumeration.cs" />
-    <Compile Include="Domain\Package.cs" />
-    <Compile Include="Domain\PackageDocumentationTypeInfo.cs" />
-    <Compile Include="Domain\PackageDto.cs" />
-    <Compile Include="Domain\PackageNumber.cs" />
-    <Compile Include="Domain\PackageStatus.cs" />
-    <Compile Include="Domain\Result.cs" />
-    <Compile Include="Domain\ResultBoolExtensions.cs" />
-    <Compile Include="Domain\ResultExtensions.cs" />
-    <Compile Include="Domain\ValueObject.cs" />
-    <Compile Include="EntityFramework\Context.cs" />
-    <Compile Include="EntityFramework\EntityTypeBuilderExtension.cs" />
-    <Compile Include="EntityFramework\QueryableExtensions.cs" />
-    <Compile Include="Migrations\20180507195822_X.cs" />
-    <Compile Include="Migrations\20180507195822_X.designer.cs">
-      <DependentUpon>20180507195822_X.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20180507200615_X2.cs" />
-    <Compile Include="Migrations\20180507200615_X2.designer.cs">
-      <DependentUpon>20180507200615_X2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\ContextModelSnapshot.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -143,6 +113,16 @@
     <PackageReference Include="System.Threading">
       <Version>4.3.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj">
+      <Project>{e8788b0d-b18b-47f1-bc93-e11d4e55d19b}</Project>
+      <Name>Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EF\EF.csproj">
+      <Project>{820a8c7e-9de5-449b-8d6c-0368e3552e34}</Project>
+      <Name>EF</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

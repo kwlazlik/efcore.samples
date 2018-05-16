@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DelegateDecompiler.EntityFrameworkCore" Version="0.24.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0-rc1-final" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Migrations\20180507195822_X.Designer.cs">
+      <DependentUpon>20180507195822_X.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Migrations\20180507200615_X2.Designer.cs">
+      <DependentUpon>20180507200615_X2.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Migrations\20180513164357_Test.Designer.cs">
+      <DependentUpon>20180513164357_Test.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>
