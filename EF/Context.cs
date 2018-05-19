@@ -1,25 +1,26 @@
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EF
+namespace EFC
 {
    public class Context : DbContext
    {
       public DbSet<Package> Packages { get; set; }
+      public DbSet<Order> Orders { get; set; }
+      public DbSet<OrderForHire> OrderForHires { get; set; }
+      public DbSet<OrderForScans> OrderForScans { get; set; }
 
-     // public DbSet<Box> Boxes { get; set; }
+      // public DbSet<Box> Boxes { get; set; }
 
       protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
       {
          base.OnConfiguring(optionsBuilder);
 
          optionsBuilder
-            .UseSqlServer(@"Server=komputerek\sqlexpress;Database=testdb;Trusted_Connection=True;")
+            .UseSqlServer(@"Server=localhost\sqlserver;Database=testdb;Trusted_Connection=True;")
             .ConfigureWarnings(wcb => wcb.Throw(RelationalEventId.QueryClientEvaluationWarning))
-            .EnableSensitiveDataLogging()
-            ;
+            .EnableSensitiveDataLogging();
       }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -28,23 +29,32 @@ namespace EF
 
          modelBuilder.Entity<Package>(etb =>
          {
-            etb.Property(p => p.Test).UsePropertyAccessMode(PropertyAccessMode.Property);
             etb.OwnsOne(x => x.Status).Property(ps => ps.Value).IsRequired();
             etb.OwnsOne(p => p.Number).UsePropertyAccessMode(PropertyAccessMode.Field).Property(pn => pn.Value);
          });
 
-//         modelBuilder.Entity<Box>(builder =>
-//         {
-//            builder.OwnsEnumeration(p => p.Status).IsRequired();
-//            builder.OwnsOne(b => b.Cid).Property(c => c.Value).HasColumnName(nameof(Box.Cid));
-//
-//           // builder.Property(b => b.Cid).HasConversion(cid => cid.Value, str => CidNumber.New(str).Value);
-//           // builder.Property(b => b.Cid).HasConversion<string>();
-//         });
+         modelBuilder.Entity<OrderForHire>(e =>
+         {
+            e.OwnsEnumeration(o => o.Status).IsRequired();
+         });
 
-//         modelBuilder.Owned<CidNumber>();
-//         modelBuilder.Owned<PackageStatus>();
-//         modelBuilder.Owned<BoxStatus>();
+         modelBuilder.Entity<OrderForScans>(e =>
+         {
+            e.OwnsEnumeration(o => o.Status).IsRequired();
+         });
+
+         //         modelBuilder.Entity<Box>(builder =>
+         //         {
+         //            builder.OwnsEnumeration(p => p.Status).IsRequired();
+         //            builder.OwnsOne(b => b.Cid).Property(c => c.Value).HasColumnName(nameof(Box.Cid));
+         //
+         //           // builder.Property(b => b.Cid).HasConversion(cid => cid.Value, str => CidNumber.New(str).Value);
+         //           // builder.Property(b => b.Cid).HasConversion<string>();
+         //         });
+
+         //         modelBuilder.Owned<CidNumber>();
+         //         modelBuilder.Owned<PackageStatus>();
+         //         modelBuilder.Owned<BoxStatus>();
       }
    }
 }

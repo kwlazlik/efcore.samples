@@ -7,7 +7,7 @@ using System.Reflection;
 namespace Domain
 {
    [Serializable]
-   [DebuggerDisplay("{Value}:{DisplayName}")]
+   [DebuggerDisplay("{DebuggerDisplay,nq}")]
    public abstract class Enumeration<TEnumeration, TValue> : ValueObject<TEnumeration>, IComparable<TEnumeration>
          where TEnumeration : Enumeration<TEnumeration, TValue>
          where TValue : IComparable<TValue>, IEquatable<TValue>
@@ -24,6 +24,10 @@ namespace Domain
          .OfType<TEnumeration>()
          .ToList();
 
+      [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+      private string DebuggerDisplay => $"{Value}:{DisplayName}";
+
+      public static IReadOnlyCollection<TEnumeration> All => Enumerations;
 
       protected Enumeration(TValue value)
       {
@@ -37,13 +41,9 @@ namespace Domain
          DisplayName = displayName;
       }
 
-
       public TValue Value { get; }
 
       public string DisplayName { get; }
-
-      public static IReadOnlyCollection<TEnumeration> All => Enumerations;
-
 
       public override string ToString() => DisplayName;
 

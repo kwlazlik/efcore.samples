@@ -1,6 +1,6 @@
 namespace Domain
 {
-   public sealed class PackageStatus : Enumeration<PackageStatus, string>
+   public sealed class PackageStatus : EnumerationString<PackageStatus>
    {
       public static PackageStatus New => new PackageStatus(nameof(New), "Nowa");
       public static PackageStatus Sent => new PackageStatus(nameof(Sent), "Wysłana");
@@ -9,8 +9,6 @@ namespace Domain
       // ReSharper disable once UnusedMember.Local
       private PackageStatus(string value) : base(value) { }
 
-      private PackageStatus(string value, string displayName) : base(value.ToLowerInvariant(), displayName) { }
-
-      public static implicit operator string(PackageStatus packageStatus) => packageStatus.Value;
+      private PackageStatus(string value, string displayName) : base(value, displayName) { }
    }
 }

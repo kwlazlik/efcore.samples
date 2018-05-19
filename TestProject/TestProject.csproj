@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>TestProject</RootNamespace>
     <AssemblyName>TestProject</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -59,9 +59,9 @@
       <Project>{e8788b0d-b18b-47f1-bc93-e11d4e55d19b}</Project>
       <Name>Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EF\EF.csproj">
+    <ProjectReference Include="..\EF\EFC.csproj">
       <Project>{820a8c7e-9de5-449b-8d6c-0368e3552e34}</Project>
-      <Name>EF</Name>
+      <Name>EFC</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
