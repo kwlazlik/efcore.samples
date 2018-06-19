@@ -13,12 +13,12 @@ namespace Domain
          return result ? func() : result;
       }
 
-      public static Result<T> OnSuccess<T>(this Result result, Func<T> func)
+      public static ResultValue<T> OnSuccess<T>(this Result result, Func<T> func)
       {
          return result ? Result.Ok(func()) : Result.Fail<T>(result.Error);
       }
 
-      public static Result<T> OnSuccess<T>(this Result result, Func<Result<T>> func)
+      public static ResultValue<T> OnSuccess<T>(this Result result, Func<ResultValue<T>> func)
       {
          return result ? func() : Result.Fail<T>(result.Error);
       }
@@ -81,27 +81,27 @@ namespace Domain
 
       // Result<TValue>
 
-      public static Result OnSuccess<T>(this Result<T> result, Func<T, Result> func)
+      public static Result OnSuccess<T>(this ResultValue<T> result, Func<T, Result> func)
       {
          return result ? func(result.Value) : Result.Fail(result.Error);
       }
 
-      public static Result<K> OnSuccess<T, K>(this Result<T> result, Func<Result<K>> func)
+      public static ResultValue<K> OnSuccess<T, K>(this ResultValue<T> result, Func<ResultValue<K>> func)
       {
          return result ? func() : Result.Fail<K>(result.Error);
       }
 
-      public static Result<K> OnSuccess<T, K>(this Result<T> result, Func<T, K> func)
+      public static ResultValue<K> OnSuccess<T, K>(this ResultValue<T> result, Func<T, K> func)
       {
          return result ? Result.Ok(func(result.Value)) : Result.Fail<K>(result.Error);
       }
 
-      public static Result<K> OnSuccess<T, K>(this Result<T> result, Func<T, Result<K>> func)
+      public static ResultValue<K> OnSuccess<T, K>(this ResultValue<T> result, Func<T, ResultValue<K>> func)
       {
          return result ? func(result.Value) : Result.Fail<K>(result.Error);
       }
 
-      public static Result<T> OnFailure<T>(this Result<T> result, Action action)
+      public static ResultValue<T> OnFailure<T>(this ResultValue<T> result, Action action)
       {
          if (result.IsFail)
          {
@@ -111,7 +111,7 @@ namespace Domain
          return result;
       }
 
-      public static Result<T> OnFailure<T>(this Result<T> result, Action<string> action)
+      public static ResultValue<T> OnFailure<T>(this ResultValue<T> result, Action<string> action)
       {
          if (result.IsFail)
          {
@@ -121,12 +121,12 @@ namespace Domain
          return result;
       }
 
-      public static K OnBoth<T, K>(this Result<T> result, Func<Result<T>, K> func)
+      public static K OnBoth<T, K>(this ResultValue<T> result, Func<ResultValue<T>, K> func)
       {
          return func(result);
       }
 
-      public static Result<T> Ensure<T>(this Result<T> result, Func<T, bool> predicate, string errorMessage)
+      public static ResultValue<T> Ensure<T>(this ResultValue<T> result, Func<T, bool> predicate, string errorMessage)
       {
          if (result.IsFail)
          {
@@ -143,13 +143,13 @@ namespace Domain
 
       // Result<TValue, TError>
 
-      public static Result OnSuccess<TValue, TNewValue, TError>(this Result<TValue, TError> result,
+      public static Result OnSuccess<TValue, TNewValue, TError>(this ResultValue<TValue, TError> result,
          Func<TValue, Result> func) where TError : class
       {
          return result ? func(result.Value) : Result.Fail<TNewValue, TError>(result.Error);
       }
 
-      public static Result<T> OnSuccess<T>(this Result<T> result, Action<T> action)
+      public static ResultValue<T> OnSuccess<T>(this ResultValue<T> result, Action<T> action)
       {
          if (result)
          {
@@ -159,31 +159,31 @@ namespace Domain
          return result;
       }
 
-      public static Result<TNewValue, TError> OnSuccess<TValue, TNewValue, TError>(this Result<TValue, TError> result,
+      public static ResultValue<TNewValue, TError> OnSuccess<TValue, TNewValue, TError>(this ResultValue<TValue, TError> result,
          Func<TValue, TNewValue> func) where TError : class
       {
          return result ? Result.Ok<TNewValue, TError>(func(result.Value)) : Result.Fail<TNewValue, TError>(result.Error);
       }
 
-      public static Result<TNewValue, TError> OnSuccess<TValue, TNewValue, TError>(this Result<TValue, TError> result,
-         Func<TValue, Result<TNewValue, TError>> func) where TError : class
+      public static ResultValue<TNewValue, TError> OnSuccess<TValue, TNewValue, TError>(this ResultValue<TValue, TError> result,
+         Func<TValue, ResultValue<TNewValue, TError>> func) where TError : class
       {
          return result.IsFail ? Result.Fail<TNewValue, TError>(result.Error) : func(result.Value);
       }
 
-      public static Result<TNewValue, TError> OnSuccess<TValue, TNewValue, TError>(this Result<TValue, TError> result,
-         Func<Result<TNewValue, TError>> func) where TError : class
+      public static ResultValue<TNewValue, TError> OnSuccess<TValue, TNewValue, TError>(this ResultValue<TValue, TError> result,
+         Func<ResultValue<TNewValue, TError>> func) where TError : class
       {
          return result ? func() : Result.Fail<TNewValue, TError>(result.Error);
       }
 
-      public static Result<TNewValue> OnSuccess<TValue, TNewValue, TError>(this Result<TValue, TError> result,
-         Func<TValue, Result<TNewValue>> func) where TError : class
+      public static ResultValue<TNewValue> OnSuccess<TValue, TNewValue, TError>(this ResultValue<TValue, TError> result,
+         Func<TValue, ResultValue<TNewValue>> func) where TError : class
       {
          return result ? func(result.Value) : Result.Fail<TNewValue, TError>(result.Error);
       }
 
-      public static Result<TValue, TError> OnSuccess<TValue, TError>(this Result<TValue, TError> result, Action<TValue> action) where TError : class
+      public static ResultValue<TValue, TError> OnSuccess<TValue, TError>(this ResultValue<TValue, TError> result, Action<TValue> action) where TError : class
       {
          if (result)
          {
@@ -193,7 +193,7 @@ namespace Domain
          return result;
       }
 
-      public static Result<TValue, TError> OnFailure<TValue, TError>(this Result<TValue, TError> result,
+      public static ResultValue<TValue, TError> OnFailure<TValue, TError>(this ResultValue<TValue, TError> result,
          Action action) where TError : class
       {
          if (result.IsFail)
@@ -204,7 +204,7 @@ namespace Domain
          return result;
       }
 
-      public static Result<TValue, TError> OnFailure<TValue, TError>(this Result<TValue, TError> result,
+      public static ResultValue<TValue, TError> OnFailure<TValue, TError>(this ResultValue<TValue, TError> result,
          Action<TError> action) where TError : class
       {
          if (result.IsFail)
@@ -215,13 +215,13 @@ namespace Domain
          return result;
       }
 
-      public static TValue OnBoth<TValue, TError>(this Result<TValue, TError> result,
-         Func<Result<TValue, TError>, TValue> func) where TError : class
+      public static TValue OnBoth<TValue, TError>(this ResultValue<TValue, TError> result,
+         Func<ResultValue<TValue, TError>, TValue> func) where TError : class
       {
          return func(result);
       }
 
-      public static Result<TValue, TError> Ensure<TValue, TError>(this Result<TValue, TError> result,
+      public static ResultValue<TValue, TError> Ensure<TValue, TError>(this ResultValue<TValue, TError> result,
          Func<TValue, bool> predicate, TError errorObject) where TError : class
       {
          if (result.IsFail)

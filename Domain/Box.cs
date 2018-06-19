@@ -38,14 +38,14 @@ namespace Domain
          };
       }
 
-      public static Result<Box> Create(string cid, BoxStatus status)
+      public static ResultValue<Box> Create(string cid, BoxStatus status)
       {
          Box box = new Box
          {
             Status = status
          };
 
-         Result<CidNumber> cidNumbeResult = CidNumber.Create(cid);
+         ResultValue<CidNumber> cidNumbeResult = CidNumber.Create(cid);
 
          return cidNumbeResult.OnSuccess(cn =>
          {

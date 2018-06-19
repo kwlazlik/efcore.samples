@@ -1,19 +1,23 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EFC.Migrations
 {
-    public partial class Orders : Migration
+    public partial class X : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateSequence(
+                name: "testhilo",
+                incrementBy: 100,
+                minValue: 1L,
+                maxValue: 2147483647L);
+
             migrationBuilder.CreateTable(
                 name: "ArchivalCategoty",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>(nullable: false),
                     Years = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -25,8 +29,7 @@ namespace EFC.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     Discriminator = table.Column<string>(nullable: false),
                     Status = table.Column<string>(nullable: true)
@@ -40,8 +43,7 @@ namespace EFC.Migrations
                 name: "Packages",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>(nullable: false),
                     Number_Value = table.Column<string>(nullable: true),
                     Status_Value = table.Column<string>(nullable: false),
                     Test = table.Column<string>(nullable: true)
@@ -55,8 +57,7 @@ namespace EFC.Migrations
                 name: "DocumentationType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     ArchivalCategoryId = table.Column<int>(nullable: true)
                 },
@@ -75,8 +76,7 @@ namespace EFC.Migrations
                 name: "PackageDocumentationTypeInfo",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>(nullable: false),
                     TypeId = table.Column<int>(nullable: true),
                     ValidFrom = table.Column<DateTime>(nullable: false),
                     ValidTo = table.Column<DateTime>(nullable: false),
@@ -131,6 +131,9 @@ namespace EFC.Migrations
 
             migrationBuilder.DropTable(
                 name: "ArchivalCategoty");
+
+            migrationBuilder.DropSequence(
+                name: "testhilo");
         }
     }
 }

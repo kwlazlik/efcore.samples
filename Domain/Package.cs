@@ -3,20 +3,21 @@ using DelegateDecompiler;
 
 namespace Domain
 {
+   public class HierarchyUnit : Entity<HierarchyUnit>
+   {
+      public string Name { get; set; }
+   }
+
+
    public class Package : Entity<Package>
    {
       private readonly List<PackageDocumentationTypeInfo> _documentationTypeInfos = new List<PackageDocumentationTypeInfo>();
-      private string _test;
+
+      public HierarchyUnit HierarchyUnit { get; set; }
 
       public PackageNumber Number { get; private set; }
 
       public PackageStatus Status { get; private set; }
-
-      public string Test
-      {
-         get => _test;
-         set => _test = value;
-      }
 
       public IReadOnlyList<PackageDocumentationTypeInfo> DocumentationTypeInfos => _documentationTypeInfos;
 

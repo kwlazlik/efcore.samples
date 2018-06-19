@@ -1,4 +1,4 @@
-using Domain;
+ using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -18,7 +18,7 @@ namespace EFC
          base.OnConfiguring(optionsBuilder);
 
          optionsBuilder
-            .UseSqlServer(@"Server=localhost\sqlserver;Database=testdb;Trusted_Connection=True;")
+            .UseSqlServer(@"Server=KOMPUTEREK\SQLEXPRESS;Database=testdb;Trusted_Connection=True;")
             .ConfigureWarnings(wcb => wcb.Throw(RelationalEventId.QueryClientEvaluationWarning))
             .EnableSensitiveDataLogging();
       }
@@ -27,20 +27,26 @@ namespace EFC
       {
          base.OnModelCreating(modelBuilder);
 
+         modelBuilder.HasSequence("testhilo").HasMin(1).HasMax(int.MaxValue).IncrementsBy(100);
+         modelBuilder.ForSqlServerUseSequenceHiLo("testhilo");
+
          modelBuilder.Entity<Package>(etb =>
          {
+            //etb.Property(e => e.Id).ForSqlServerUseSequenceHiLo("testhilo");
             etb.OwnsOne(x => x.Status).Property(ps => ps.Value).IsRequired();
             etb.OwnsOne(p => p.Number).UsePropertyAccessMode(PropertyAccessMode.Field).Property(pn => pn.Value);
          });
 
-         modelBuilder.Entity<OrderForHire>(e =>
+         modelBuilder.Entity<OrderForHire>(etb =>
          {
-            e.OwnsEnumeration(o => o.Status).IsRequired();
+           // etb.Property(e => e.Id).ForSqlServerUseSequenceHiLo("testhilo");
+            etb.OwnsEnumeration(o => o.Status).IsRequired();
          });
 
-         modelBuilder.Entity<OrderForScans>(e =>
+         modelBuilder.Entity<OrderForScans>(etb =>
          {
-            e.OwnsEnumeration(o => o.Status).IsRequired();
+            etb.Property(e => e.Id).ForSqlServerUseSequenceHiLo("testhilo");
+            etb.OwnsEnumeration(o => o.Status).IsRequired();
          });
 
          //         modelBuilder.Entity<Box>(builder =>

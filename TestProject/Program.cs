@@ -12,15 +12,28 @@ namespace TestProject
    {
       public string Cid { get; set; }
    }
+   
+   public class PackageViewModel
+   {
+      public string Number { get; set; }
+
+      public string HierarchyUnitName { get; set; }
+   }
 
    internal class Program
    {
       private static void Main(string[] args)
       {
+         Mapper.Initialize(x =>
+         {
+            x.CreateMap<Package, PackageDto>();
+            x.CreateMap<Package, PackageViewModel>();
+         });
+
          Package package1 = Package.Create(new PackageNumber("123"), PackageStatus.New);
-         package1.Test = "alamakota";
          Package package2 = Package.Create(new PackageNumber("123"), PackageStatus.New);
-         package2.Test = "alamakota 2";
+         package2.HierarchyUnit = new HierarchyUnit {Name = "alamakota"};
+
 
          using (Context context = new Context())
          {
@@ -29,7 +42,11 @@ namespace TestProject
             context.SaveChanges();
          }
 
-         Mapper.Initialize(x => x.CreateMap<Package, PackageDto>());
+         using (Context context = new Context())
+         {
+            var a = context.Packages.ProjectTo<PackageViewModel>().ToList();
+         }
+
 
          using (Context context = new Context())
          {

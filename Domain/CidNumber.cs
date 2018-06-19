@@ -18,7 +18,7 @@ namespace Domain
 
       public override string ToString() => Value;
 
-      public static Result<CidNumber> Create(string cid)
+      public static ResultValue<CidNumber> Create(string cid)
       {
          return Validate(cid).ToResult(() => new CidNumber(cid), "Niepoprawny numer cid.");
       }

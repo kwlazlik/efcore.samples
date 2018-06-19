@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DelegateDecompiler;
@@ -13,6 +14,7 @@ namespace TestProject.Core
       public string Cid { get; set; }
    }
 
+
    internal class Program
    {
       private static void Main(string[] args)
@@ -25,11 +27,15 @@ namespace TestProject.Core
                Status = OrderForHireStatus.New
             });
 
+            context.Add(Package.Create(new PackageNumber("123"), PackageStatus.New));
+
             context.Add(new OrderForScans
             {
                Description = "zamowienie na wypozyczenie",
                Status = OrderForScansStatus.Rejected
             });
+
+            context.Add(Package.Create(new PackageNumber("123"), PackageStatus.Received));
 
             context.Add(new OrderForScans
             {
@@ -39,6 +45,66 @@ namespace TestProject.Core
 
             context.SaveChanges();
          }
+
+         Task.Run(() =>
+         {
+            using (Context context = new Context())
+            {
+               context.Add(new OrderForHire
+               {
+                  Description = "zamowienie na wypozyczenie",
+                  Status = OrderForHireStatus.New
+               });
+
+               context.Add(Package.Create(new PackageNumber("123"), PackageStatus.New));
+
+               context.Add(new OrderForScans
+               {
+                  Description = "zamowienie na wypozyczenie",
+                  Status = OrderForScansStatus.Rejected
+               });
+
+               context.Add(Package.Create(new PackageNumber("123"), PackageStatus.Received));
+
+               context.Add(new OrderForScans
+               {
+                  Description = "zamowienie na wypozyczenie",
+                  Status = OrderForScansStatus.Rejected
+               });
+
+               context.SaveChanges();
+            }
+         });
+         Task.Run(() =>
+         {
+            using (Context context = new Context())
+            {
+               context.Add(new OrderForHire
+               {
+                  Description = "zamowienie na wypozyczenie",
+                  Status = OrderForHireStatus.New
+               });
+
+               context.Add(Package.Create(new PackageNumber("123"), PackageStatus.New));
+
+               context.Add(new OrderForScans
+               {
+                  Description = "zamowienie na wypozyczenie",
+                  Status = OrderForScansStatus.Rejected
+               });
+
+               context.Add(Package.Create(new PackageNumber("123"), PackageStatus.Received));
+
+               context.Add(new OrderForScans
+               {
+                  Description = "zamowienie na wypozyczenie",
+                  Status = OrderForScansStatus.Rejected
+               });
+
+               context.SaveChanges();
+            }
+         });
+
 
          using (Context context = new Context())
          {

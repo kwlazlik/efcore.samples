@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFC.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20180519131103_Orders")]
-    partial class Orders
+    [Migration("20180520084703_X2")]
+    partial class X2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,13 +19,15 @@ namespace EFC.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.0-rc1-32029")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Relational:Sequence:.testhilo", "'testhilo', '', '1', '100', '1', '2147483647', 'Int64', 'False'")
+                .HasAnnotation("SqlServer:HiLoSequenceName", "testhilo")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
             modelBuilder.Entity("Domain.ArchivalCategoty", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<int>("Years");
 
@@ -38,7 +40,7 @@ namespace EFC.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<int?>("ArchivalCategoryId");
 
@@ -55,7 +57,8 @@ namespace EFC.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:HiLoSequenceName", "testhilo")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<string>("Description");
 
@@ -73,7 +76,7 @@ namespace EFC.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<string>("Test");
 
@@ -86,7 +89,7 @@ namespace EFC.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<int?>("PackageId");
 
@@ -136,9 +139,7 @@ namespace EFC.Migrations
                 {
                     b.OwnsOne("Domain.PackageNumber", "Number", b1 =>
                         {
-                            b1.Property<int?>("PackageId")
-                                .ValueGeneratedOnAdd()
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                            b1.Property<int?>("PackageId");
 
                             b1.Property<string>("Value");
 
@@ -152,9 +153,7 @@ namespace EFC.Migrations
 
                     b.OwnsOne("Domain.PackageStatus", "Status", b1 =>
                         {
-                            b1.Property<int?>("PackageId")
-                                .ValueGeneratedOnAdd()
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                            b1.Property<int?>("PackageId");
 
                             b1.Property<string>("Value")
                                 .IsRequired();
@@ -183,9 +182,7 @@ namespace EFC.Migrations
                 {
                     b.OwnsOne("Domain.OrderForHireStatus", "Status", b1 =>
                         {
-                            b1.Property<int?>("OrderForHireId")
-                                .ValueGeneratedOnAdd()
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                            b1.Property<int?>("OrderForHireId");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -204,9 +201,7 @@ namespace EFC.Migrations
                 {
                     b.OwnsOne("Domain.OrderForScansStatus", "Status", b1 =>
                         {
-                            b1.Property<int?>("OrderForScansId")
-                                .ValueGeneratedOnAdd()
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                            b1.Property<int?>("OrderForScansId");
 
                             b1.Property<string>("Value")
                                 .IsRequired()

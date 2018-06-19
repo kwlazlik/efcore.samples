@@ -4,14 +4,16 @@ using EFC;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EFC.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20180520083907_X")]
+    partial class X
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,19 +53,6 @@ namespace EFC.Migrations
                     b.ToTable("DocumentationType");
                 });
 
-            modelBuilder.Entity("Domain.HierarchyUnit", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("HierarchyUnit");
-                });
-
             modelBuilder.Entity("Domain.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -87,13 +76,12 @@ namespace EFC.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:HiLoSequenceName", "testhilo")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
-                    b.Property<int?>("HierarchyUnitId");
+                    b.Property<string>("Test");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("HierarchyUnitId");
 
                     b.ToTable("Packages");
                 });
@@ -150,10 +138,6 @@ namespace EFC.Migrations
 
             modelBuilder.Entity("Domain.Package", b =>
                 {
-                    b.HasOne("Domain.HierarchyUnit", "HierarchyUnit")
-                        .WithMany()
-                        .HasForeignKey("HierarchyUnitId");
-
                     b.OwnsOne("Domain.PackageNumber", "Number", b1 =>
                         {
                             b1.Property<int?>("PackageId");
