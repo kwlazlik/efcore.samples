@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <Company>Vsoft S.A.</Company>
+  </PropertyGroup>
+
+   <PropertyGroup>
+      <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+      <AssemblyName>VSoft.Soda.NonMembership.Domain</AssemblyName>
+      <RootNamespace>VSoft.Soda.NonMembership.Domain</RootNamespace>
+   </PropertyGroup>
+
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+     <LangVersion>7.3</LangVersion>
+   </PropertyGroup>
+
+   <ItemGroup>
+     <Compile Include="..\Shared\SodaProductInfo.cs" Link="Properties\SodaProductInfo.cs" />
+     <Compile Include="..\Shared\SolutionInfo.cs" Link="Properties\SolutionInfo.cs" />
+     <Compile Include="..\Shared\SolutionVersionInfo.cs" Link="Properties\SolutionVersionInfo.cs" />
+     <Compile Include=".Config\BusinessLogs\BusinessLog.cs" />
+     <Compile Include=".Config\BusinessLogs\BusinessLogEntity.cs" />
+     <Compile Include=".Config\BusinessLogs\ObjectExtensions.cs" />
+     <Compile Include=".Config\ConfigKeys\ConfigKeys.cs" />
+     <Compile Include=".Config\Logs\Log.cs" />
+     <Compile Include=".Config\Logs\LogLevel.cs" />
+     <Compile Include=".Config\SmartSearch\ElasticSearchSynchronizationInfo.cs" />
+   </ItemGroup>
+
+   <ItemGroup>
+     <PackageReference Include="DelegateDecompiler" Version="0.24.0" />
+     <PackageReference Include="System.ValueTuple" Version="4.3.1" />
+   </ItemGroup>
+
+   <ItemGroup>
+     <ProjectReference Include="..\Domain\Domain.csproj" />
+   </ItemGroup>
+
+   <ItemGroup>
+     <Reference Include="System.ComponentModel.DataAnnotations" />
+   </ItemGroup>
+
+</Project>

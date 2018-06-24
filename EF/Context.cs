@@ -1,4 +1,4 @@
- using Domain;
+using Domain.School;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -6,12 +6,10 @@ namespace EFC
 {
    public class Context : DbContext
    {
-      public DbSet<Package> Packages { get; set; }
-      public DbSet<Order> Orders { get; set; }
-      public DbSet<OrderForHire> OrderForHires { get; set; }
-      public DbSet<OrderForScans> OrderForScans { get; set; }
-
-      // public DbSet<Box> Boxes { get; set; }
+      public DbSet<Exam> Exams { get; set; }
+      public DbSet<Student> Students { get; set; }
+      public DbSet<StudentExamGrade> StudentExams { get; set; }
+      public DbSet<Subject> Subjects { get; set; }
 
       protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
       {
@@ -27,40 +25,11 @@ namespace EFC
       {
          base.OnModelCreating(modelBuilder);
 
-         modelBuilder.HasSequence("testhilo").HasMin(1).HasMax(int.MaxValue).IncrementsBy(100);
-         modelBuilder.ForSqlServerUseSequenceHiLo("testhilo");
+         modelBuilder.Entity<Exam>().OwnsOne(e => e.Difficulty).Property(d => d.Value).HasColumnName(nameof(Exam.Difficulty));
+         //modelBuilder.Entity<Exam>().Property(e => e.Difficulty).HasColumnName(nameof(Exam.Difficulty)).HasConversion(e => e.Value, s => new ExamDifficulty(s));
 
-         modelBuilder.Entity<Package>(etb =>
-         {
-            //etb.Property(e => e.Id).ForSqlServerUseSequenceHiLo("testhilo");
-            etb.OwnsOne(x => x.Status).Property(ps => ps.Value).IsRequired();
-            etb.OwnsOne(p => p.Number).UsePropertyAccessMode(PropertyAccessMode.Field).Property(pn => pn.Value);
-         });
-
-         modelBuilder.Entity<OrderForHire>(etb =>
-         {
-           // etb.Property(e => e.Id).ForSqlServerUseSequenceHiLo("testhilo");
-            etb.OwnsEnumeration(o => o.Status).IsRequired();
-         });
-
-         modelBuilder.Entity<OrderForScans>(etb =>
-         {
-            etb.Property(e => e.Id).ForSqlServerUseSequenceHiLo("testhilo");
-            etb.OwnsEnumeration(o => o.Status).IsRequired();
-         });
-
-         //         modelBuilder.Entity<Box>(builder =>
-         //         {
-         //            builder.OwnsEnumeration(p => p.Status).IsRequired();
-         //            builder.OwnsOne(b => b.Cid).Property(c => c.Value).HasColumnName(nameof(Box.Cid));
-         //
-         //           // builder.Property(b => b.Cid).HasConversion(cid => cid.Value, str => CidNumber.New(str).Value);
-         //           // builder.Property(b => b.Cid).HasConversion<string>();
-         //         });
-
-         //         modelBuilder.Owned<CidNumber>();
-         //         modelBuilder.Owned<PackageStatus>();
-         //         modelBuilder.Owned<BoxStatus>();
+         modelBuilder.Entity<StudentExamGrade>().OwnsOne(e => e.Grade).Property(d => d.Value).HasColumnName(nameof(StudentExamGrade.Grade));
+         //modelBuilder.Entity<StudentExam>().Property(e => e.Grade).HasColumnName(nameof(StudentExam.Grade)).HasConversion(e => e.Value, s => new StudentExamGrade(s));
       }
    }
 }

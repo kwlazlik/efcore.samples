@@ -1,176 +1,76 @@
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using DelegateDecompiler;
-using Domain;
+using Domain.School;
 using EFC;
+using EFC.Interception;
 
-namespace TestProject.Core   
+namespace TestProject.Core
 {
-   public class BoxDto
+   public class StdentViewModel
    {
-      public string Cid { get; set; }
-   }
+      public string FirstName { get; set; }
 
+      public string LastName { get; set; }
+
+      public int ExamGradessCount { get; set; }
+   }
 
    internal class Program
    {
       private static void Main(string[] args)
       {
-         using (Context context = new Context())
+         Mapper.Initialize(c => { c.CreateMap<Student, StdentViewModel>(); });
+
+
+         using (var context = new Context())
          {
-            context.Add(new OrderForHire
+            Subject math = new Subject
             {
-               Description = "zamowienie na wypozyczenie",
-               Status = OrderForHireStatus.New
-            });
+               Name = "math"
+            };
 
-            context.Add(Package.Create(new PackageNumber("123"), PackageStatus.New));
-
-            context.Add(new OrderForScans
+            Exam mathExam = new Exam
             {
-               Description = "zamowienie na wypozyczenie",
-               Status = OrderForScansStatus.Rejected
-            });
+               Difficulty = ExamDifficulty.Hard,
+               Subject = math,
+               Title = "Algebra exam"
+            };
 
-            context.Add(Package.Create(new PackageNumber("123"), PackageStatus.Received));
-
-            context.Add(new OrderForScans
+            Exam programmingExam = new Exam
             {
-               Description = "zamowienie na wypozyczenie",
-               Status = OrderForScansStatus.Rejected
-            });
+               Difficulty = ExamDifficulty.Medium,
+               Subject = math,
+               Title = "C# programming"
+            };
 
+            StudentExamGrade mathExamGrade = new StudentExamGrade
+            {
+               Exam = mathExam,
+               Grade = Grade.A
+            };
+
+            StudentExamGrade programmingExamGrade = new StudentExamGrade
+            {
+               Exam = mathExam,
+               Grade = Grade.B
+            };
+
+            Student student = new Student
+            {
+               FirstName = "ala",
+               LastName = "makota"
+            }.AddExamGrades(mathExamGrade, programmingExamGrade);
+
+            context.Add(mathExam);
             context.SaveChanges();
          }
 
-         Task.Run(() =>
+         using (var context = new Context())
          {
-            using (Context context = new Context())
-            {
-               context.Add(new OrderForHire
-               {
-                  Description = "zamowienie na wypozyczenie",
-                  Status = OrderForHireStatus.New
-               });
-
-               context.Add(Package.Create(new PackageNumber("123"), PackageStatus.New));
-
-               context.Add(new OrderForScans
-               {
-                  Description = "zamowienie na wypozyczenie",
-                  Status = OrderForScansStatus.Rejected
-               });
-
-               context.Add(Package.Create(new PackageNumber("123"), PackageStatus.Received));
-
-               context.Add(new OrderForScans
-               {
-                  Description = "zamowienie na wypozyczenie",
-                  Status = OrderForScansStatus.Rejected
-               });
-
-               context.SaveChanges();
-            }
-         });
-         Task.Run(() =>
-         {
-            using (Context context = new Context())
-            {
-               context.Add(new OrderForHire
-               {
-                  Description = "zamowienie na wypozyczenie",
-                  Status = OrderForHireStatus.New
-               });
-
-               context.Add(Package.Create(new PackageNumber("123"), PackageStatus.New));
-
-               context.Add(new OrderForScans
-               {
-                  Description = "zamowienie na wypozyczenie",
-                  Status = OrderForScansStatus.Rejected
-               });
-
-               context.Add(Package.Create(new PackageNumber("123"), PackageStatus.Received));
-
-               context.Add(new OrderForScans
-               {
-                  Description = "zamowienie na wypozyczenie",
-                  Status = OrderForScansStatus.Rejected
-               });
-
-               context.SaveChanges();
-            }
-         });
-
-
-         using (Context context = new Context())
-         {
-            var orders = context.Orders.ToList();
+            var exam = context.Exams.FixExpression().Decompile().FirstOrDefault(e => e.Difficulty == ExamDifficulty.Hard);
          }
-
-
-
-         //         Package package1 = Package.Create(new PackageNumber("123"), PackageStatus.New);
-         //         package1.Test = "alamakota";
-         //         Package package2 = Package.Create(new PackageNumber("123"), PackageStatus.New);
-         //         package2.Test = "alamakota 2";
-
-         //         using (Context context = new Context())
-         //         {
-         //            context.Add(package1);
-         //            context.Add(package2);
-         //            context.SaveChanges();
-         //         }
-
-         //         Mapper.Initialize(x => x.CreateMap<Package, PackageDto>());
-
-         //         using (Context context = new Context())
-         //         {
-         //            //string packages2Sql = context.Packages.Where(p => Equals(p.Status, PackageStatus.Sent)).ToSql();
-         //            //string packages2Sql2 = context.Packages.Where(p => p.Status == PackageStatus.Sent.Value).ToSql();
-         //            //string packages2Sql222 = context.Packages.Where(p => p.Status.Equals(PackageStatus.Sent)).ToSql();
-
-         ////            string packages2Sql22 = context.Packages.Where(p => p.Status.Value == PackageStatus.New).ToSql();
-         ////            List<Package> packages = context.Packages.Where(p => p.Status.Value == PackageStatus.New.Value).ToList();
-         ////            List<Package> packages2 = context.Packages.Where(p => p.Status.Value.Equals(PackageStatus.New.Value)).ToList();
-
-         //            List<Package> packages3 = context.Packages.Where(p => p.Status.Value.Equals(PackageStatus.New.Value)).Decompile().ToList();
-         //            List<PackageDto> packages4 = context.Packages.Where(p => p.NumberStatus == "123new").ProjectTo<PackageDto>().Decompile().ToList();
-
-         //            Package package = context.Packages.First(p => p.Status.Value == PackageStatus.New.Value);
-         //            package.Send(new PackageNumber("2345678"));
-
-         //            context.SaveChanges();
-         //         }
-
-         //         using (Context context = new Context())
-         //         {
-         //            List<Package> packages = context.Packages.Where(p => p.Status.Value.Equals(PackageStatus.Sent.Value)).Decompile().ToList();
-
-         //         }
-
-         //         Box box1 = Box.New("123456789012").Value;
-         //         Box box2 = Box.New("000000000000").Value;
-         //
-         //         using (Context c = new Context())
-         //         {
-         //            c.Add(box1);
-         //            c.Add(box2);
-         //            c.SaveChanges();
-         //         }
-         //
-
-         //         using (Context c = new Context())
-         //         {
-         //           // string s = c.Boxes.Where(b => b.Cid.Value == "000000000000").ToSql();
-         //           // string s1 = c.Boxes.Where(b => b.Cid.Value == "000000000000").ProjectTo<BoxDto>().ToSql();
-         //
-         //            var a = c.Boxes.Where(b => b.Cid.Value == "000000000000").ToList();
-         //            var a1 = c.Boxes.Where(b => b.Cid.Value == "000000000000").ProjectTo<BoxDto>().ToList();
-         //         }
       }
    }
 }

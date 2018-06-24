@@ -3,17 +3,14 @@ using System.Linq;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DelegateDecompiler;
-using Domain;
+using Domain.DocumentationTypes;
+using Domain.Hierarchy;
+using Domain.Packages;
 using EFC;
 
-namespace TestProject   
+namespace TestProject
 {
-   public class BoxDto
-   {
-      public string Cid { get; set; }
-   }
-   
-   public class PackageViewModel
+   public class BranchPackageViewModel
    {
       public string Number { get; set; }
 
@@ -24,74 +21,48 @@ namespace TestProject
    {
       private static void Main(string[] args)
       {
-         Mapper.Initialize(x =>
+         Mapper.Initialize(x => { x.CreateMap<BranchPackage, BranchPackageViewModel>(); });
+
+         using (var context = new Context())
          {
-            x.CreateMap<Package, PackageDto>();
-            x.CreateMap<Package, PackageViewModel>();
-         });
+            ArchivalCategory archivalCategory = 
+            DocumentationType documentationType = context.DocumentationTypes.FirstOrDefault(dt => dt.Name.Value == "dt1") ?? DocumentationType.Create()
 
-         Package package1 = Package.Create(new PackageNumber("123"), PackageStatus.New);
-         Package package2 = Package.Create(new PackageNumber("123"), PackageStatus.New);
-         package2.HierarchyUnit = new HierarchyUnit {Name = "alamakota"};
+            BranchPackage BranchPackage1 = BranchPackage.Create();
+            BranchPackage BranchPackage2 = BranchPackage.Create(new PackageNumber("123"), BranchPackageStatus.New);
 
-
-         using (Context context = new Context())
-         {
-            context.Add(package1);
-            context.Add(package2);
+            //context.Add(BranchPackage1);
+            context.Add(BranchPackage2);
             context.SaveChanges();
          }
 
-         using (Context context = new Context())
+         //         using (Context context = new Context())
+         //         {
+         //           // var a = context.BranchPackages.ProjectTo<BranchPackageViewModel>().ToList();
+         //            string s = "NEW";
+         //            string n = "123";
+         //            var a2 = context.BranchPackages.Where(p => ((string)p.Number) == s).ToList();
+         //
+         //         }
+
+         using (var context = new Context())
          {
-            var a = context.Packages.ProjectTo<PackageViewModel>().ToList();
-         }
+            string BranchPackages2Sql = context.BranchPackages.Where(p => Equals(p.Status, BranchPackageStatus.Sent)).ToSql();
+            string BranchPackages2Sql2 = context.BranchPackages.Where(p => p.Status == BranchPackageStatus.Sent.Value).ToSql();
+            string BranchPackages2Sql222 = context.BranchPackages.Where(p => p.Status.Equals(BranchPackageStatus.Sent)).ToSql();
+            string BranchPackages2Sql22 = context.BranchPackages.Where(p => p.Status.Value == BranchPackageStatus.New).ToSql();
+            string BranchPackages2Sql22C = context.BranchPackages.Where(p => p.Status.Value == BranchPackageStatus.New.Value).ToSql();
+            IQueryable<BranchPackage> BranchPackages2Sql22asdc = context.BranchPackages.Where(p => p.Status == BranchPackageStatus.New);
 
+            List<BranchPackage> BranchPackages = context.BranchPackages.Where(p => p.Status.Value == BranchPackageStatus.New.Value).ToList();
+            List<BranchPackage> BranchPackages2 = context.BranchPackages.Where(p => p.Status.Value.Equals(BranchPackageStatus.New.Value)).ToList();
 
-         using (Context context = new Context())
-         {
-            //string packages2Sql = context.Packages.Where(p => Equals(p.Status, PackageStatus.Sent)).ToSql();
-            //string packages2Sql2 = context.Packages.Where(p => p.Status == PackageStatus.Sent.Value).ToSql();
-            //string packages2Sql222 = context.Packages.Where(p => p.Status.Equals(PackageStatus.Sent)).ToSql();
-
-//            string packages2Sql22 = context.Packages.Where(p => p.Status.Value == PackageStatus.New).ToSql();
-//            List<Package> packages = context.Packages.Where(p => p.Status.Value == PackageStatus.New.Value).ToList();
-//            List<Package> packages2 = context.Packages.Where(p => p.Status.Value.Equals(PackageStatus.New.Value)).ToList();
-
-            List<Package> packages3 = context.Packages.Where(p => p.Status.Value.Equals(PackageStatus.New.Value)).Decompile().ToList();
-            List<PackageDto> packages4 = context.Packages.Where(p => p.NumberStatus == "123new").ProjectTo<PackageDto>().Decompile().ToList();
-
-            Package package = context.Packages.First(p => p.Status.Value == PackageStatus.New.Value);
-            package.Send(new PackageNumber("2345678"));
+            List<BranchPackage> BranchPackages3 = context.BranchPackages.Where(p => p.Status.Value.Equals(BranchPackageStatus.New.Value)).Decompile().ToList();
+            List<BranchPackageViewModel> BranchPackages4 =
+               context.BranchPackages.Where(p => p.Number == "123new").ProjectTo<BranchPackageViewModel>().Decompile().ToList();
 
             context.SaveChanges();
          }
-
-         using (Context context = new Context())
-         {
-            List<Package> packages = context.Packages.Where(p => p.Status.Value.Equals(PackageStatus.Sent.Value)).Decompile().ToList();
-
-         }
-
-//         Box box1 = Box.New("123456789012").Value;
-//         Box box2 = Box.New("000000000000").Value;
-//
-//         using (Context c = new Context())
-//         {
-//            c.Add(box1);
-//            c.Add(box2);
-//            c.SaveChanges();
-//         }
-//
-
-//         using (Context c = new Context())
-//         {
-//           // string s = c.Boxes.Where(b => b.Cid.Value == "000000000000").ToSql();
-//           // string s1 = c.Boxes.Where(b => b.Cid.Value == "000000000000").ProjectTo<BoxDto>().ToSql();
-//
-//            var a = c.Boxes.Where(b => b.Cid.Value == "000000000000").ToList();
-//            var a1 = c.Boxes.Where(b => b.Cid.Value == "000000000000").ProjectTo<BoxDto>().ToList();
-//         }
       }
    }
 }

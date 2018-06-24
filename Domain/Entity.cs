@@ -8,21 +8,19 @@ namespace Domain
    {
       private int? _hashCode;
 
+      // ReSharper disable once UnusedAutoPropertyAccessor.Local
       public TKey Id { get; private set; }
 
       public bool Equals(TEntity other) =>
-         other != null && (Equals(other.Id, default(TKey)) && Equals(Id, default(TKey)) ? ReferenceEquals(other, this) : other.Id.Equals(Id));
+         other != null && (Equals(other.Id, default) && Equals(Id, default) ? ReferenceEquals(other, this) : other.Id.Equals(Id));
 
       public override bool Equals(object obj) => Equals(obj as TEntity);
 
       public override int GetHashCode()
       {
-         if (_hashCode.HasValue)
-         {
-            return _hashCode.Value;
-         }
+         if (_hashCode.HasValue) return _hashCode.Value;
 
-         bool thisIsTransient = Equals(Id, default(TKey));
+         bool thisIsTransient = Equals(Id, default);
 
          if (thisIsTransient)
          {
@@ -32,5 +30,10 @@ namespace Domain
 
          return Id.GetHashCode();
       }
+
+      public static bool operator ==(Entity<TEntity, TKey> left, Entity<TEntity, TKey> right) =>
+         left is null && right is null || !(left is null) && left.Equals(right);
+
+      public static bool operator !=(Entity<TEntity, TKey> left, Entity<TEntity, TKey> right) => !(left == right);
    }
 }
