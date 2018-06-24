@@ -9,6 +9,14 @@ namespace Domain.School
       public static ExamDifficulty Medium => new ExamDifficulty(nameof(Medium), "sredni");
       public static ExamDifficulty Easy => new ExamDifficulty(nameof(Easy), "latwy");
 
+      public static bool operator ==(ExamDifficulty left, string right)
+      {
+         return left.Value == right;
+      }
 
+      public static bool operator !=(ExamDifficulty left, string right)
+      {
+         return !(left == right);
+      }
    }
 }

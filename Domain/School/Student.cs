@@ -10,7 +10,7 @@ namespace Domain.School
 
       public string LastName { get; set; }
 
-      public IReadOnlyCollection<StudentExamGrade> ExamGrades => _examGrades;
+      public IReadOnlyList<StudentExamGrade> ExamGrades => _examGrades;
 
       public Student AddExamGrades(params StudentExamGrade[] examsGrade)
       {

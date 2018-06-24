@@ -8,6 +8,6 @@ namespace Domain.School
 
       public string Name { get; set; }
 
-      public IReadOnlyCollection<Exam> Exams => _exams;
+      public IReadOnlyList<Exam> Exams => _exams;
    }
 }

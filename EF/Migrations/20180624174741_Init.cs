@@ -4,26 +4,21 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EFC.Migrations
 {
-    public partial class First : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Students",
+                name: "SchoolClasses",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DbCreatedAt = table.Column<DateTime>(nullable: false),
-                    DbCreatedBy = table.Column<string>(nullable: true),
-                    DbModifiedAt = table.Column<DateTime>(nullable: false),
-                    DbModifiedBy = table.Column<string>(nullable: true),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true)
+                    Number = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Students", x => x.Id);
+                    table.PrimaryKey("PK_SchoolClasses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -44,6 +39,31 @@ namespace EFC.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Students",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    DbCreatedAt = table.Column<DateTime>(nullable: false),
+                    DbCreatedBy = table.Column<string>(nullable: true),
+                    DbModifiedAt = table.Column<DateTime>(nullable: false),
+                    DbModifiedBy = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    SchoolClassId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Students", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Students_SchoolClasses_SchoolClassId",
+                        column: x => x.SchoolClassId,
+                        principalTable: "SchoolClasses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Exams",
                 columns: table => new
                 {
@@ -55,7 +75,8 @@ namespace EFC.Migrations
                     DbModifiedBy = table.Column<string>(nullable: true),
                     Title = table.Column<string>(nullable: true),
                     Difficulty = table.Column<string>(nullable: true),
-                    SubjectId = table.Column<int>(nullable: true)
+                    SubjectId = table.Column<int>(nullable: true),
+                    Time = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -113,6 +134,11 @@ namespace EFC.Migrations
                 name: "IX_StudentExams_StudentId",
                 table: "StudentExams",
                 column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Students_SchoolClassId",
+                table: "Students",
+                column: "SchoolClassId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -128,6 +154,9 @@ namespace EFC.Migrations
 
             migrationBuilder.DropTable(
                 name: "Subjects");
+
+            migrationBuilder.DropTable(
+                name: "SchoolClasses");
         }
     }
 }

@@ -33,7 +33,12 @@ namespace EFC.Migrations
 
                     b.Property<string>("DbModifiedBy");
 
+                    b.Property<string>("Difficulty")
+                        .HasConversion(new ValueConverter<string, string>(v => default(string), v => default(string), new ConverterMappingHints()));
+
                     b.Property<int?>("SubjectId");
+
+                    b.Property<long>("Time");
 
                     b.Property<string>("Title");
 
@@ -42,6 +47,19 @@ namespace EFC.Migrations
                     b.HasIndex("SubjectId");
 
                     b.ToTable("Exams");
+                });
+
+            modelBuilder.Entity("Domain.School.SchoolClass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Number");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SchoolClasses");
                 });
 
             modelBuilder.Entity("Domain.School.Student", b =>
@@ -62,12 +80,16 @@ namespace EFC.Migrations
 
                     b.Property<string>("LastName");
 
+                    b.Property<int?>("SchoolClassId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SchoolClassId");
 
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("Domain.School.StudentExam", b =>
+            modelBuilder.Entity("Domain.School.StudentExamGrade", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -120,38 +142,28 @@ namespace EFC.Migrations
                     b.HasOne("Domain.School.Subject", "Subject")
                         .WithMany("Exams")
                         .HasForeignKey("SubjectId");
-
-                    b.OwnsOne("Domain.School.ExamDifficulty", "Difficulty", b1 =>
-                        {
-                            b1.Property<int?>("ExamId")
-                                .ValueGeneratedOnAdd()
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                            b1.Property<string>("Value")
-                                .HasColumnName("Difficulty");
-
-                            b1.ToTable("Exams");
-
-                            b1.HasOne("Domain.School.Exam")
-                                .WithOne("Difficulty")
-                                .HasForeignKey("Domain.School.ExamDifficulty", "ExamId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
                 });
 
-            modelBuilder.Entity("Domain.School.StudentExam", b =>
+            modelBuilder.Entity("Domain.School.Student", b =>
+                {
+                    b.HasOne("Domain.School.SchoolClass")
+                        .WithMany("Students")
+                        .HasForeignKey("SchoolClassId");
+                });
+
+            modelBuilder.Entity("Domain.School.StudentExamGrade", b =>
                 {
                     b.HasOne("Domain.School.Exam", "Exam")
                         .WithMany()
                         .HasForeignKey("ExamId");
 
                     b.HasOne("Domain.School.Student", "Student")
-                        .WithMany("Exams")
+                        .WithMany("ExamGrades")
                         .HasForeignKey("StudentId");
 
                     b.OwnsOne("Domain.School.Grade", "Grade", b1 =>
                         {
-                            b1.Property<int?>("StudentExamId")
+                            b1.Property<int?>("StudentExamGradeId")
                                 .ValueGeneratedOnAdd()
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -160,9 +172,9 @@ namespace EFC.Migrations
 
                             b1.ToTable("StudentExams");
 
-                            b1.HasOne("Domain.School.StudentExam")
+                            b1.HasOne("Domain.School.StudentExamGrade")
                                 .WithOne("Grade")
-                                .HasForeignKey("Domain.School.Grade", "StudentExamId")
+                                .HasForeignKey("Domain.School.Grade", "StudentExamGradeId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
                 });

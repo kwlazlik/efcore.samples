@@ -5,30 +5,28 @@ using System.Runtime.Serialization;
 
 namespace Domain
 {
-   public abstract class ValueType<T> : IEquatable<ValueType<T>> where T : ValueType<T>
+   public abstract class ValueType<TValueType> : IEquatable<ValueType<TValueType>> where TValueType : ValueType<TValueType>
    {
-      public bool Equals(ValueType<T> other) => other != null && GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
+      public static TValueType Empty = (TValueType)FormatterServices.GetUninitializedObject(typeof(TValueType));
 
-      public override bool Equals(object other) => Equals(other as ValueType<T>);
+      public bool Equals(ValueType<TValueType> other) => other != null && GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
 
-      public override int GetHashCode() =>
-         GetEqualityComponents()
-            .Aggregate(1, (current, obj) =>
-            {
-               unchecked
-               {
-                  return current * 23 + (obj?.GetHashCode() ?? 0);
-               }
-            });
+      public override bool Equals(object other) => Equals(other as ValueType<TValueType>);
 
-      public static bool operator ==(T a, ValueType<T> b) => a is null && b is null || !(a is null) && !(b is null) && a.Equals(b);
+      public override int GetHashCode() => GetEqualityComponents().Aggregate(1, (current, value) =>
+      {
+         unchecked
+         {
+            return current * 23 + (value?.GetHashCode() ?? 0);
+         }
+      });
 
-      public static bool operator !=(T a, ValueType<T> b) => !(a == b);
+      public static bool operator ==(TValueType a, ValueType<TValueType> b) => a is null && b is null || !(a is null) && !(b is null) && a.Equals(b);
+
+      public static bool operator !=(TValueType a, ValueType<TValueType> b) => !(a == b);
+
+      public bool IsEmpty() => Equals(Empty);
 
       protected abstract IEnumerable<object> GetEqualityComponents();
-
-      public static T Empty() => (T) FormatterServices.GetUninitializedObject(typeof(T));
-
-      public bool IsEmpty() => GetEqualityComponents().All(c => c == default);
    }
 }
