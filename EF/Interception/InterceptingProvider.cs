@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using ExpressionVisitor = System.Linq.Expressions.ExpressionVisitor;
 
 namespace EFC.Interception
 {
@@ -19,8 +18,7 @@ namespace EFC.Interception
       public IQueryable<TElement> CreateQuery<TElement>(Expression expression) =>
          new InterceptedQueryable<TElement>(this, _inner.CreateQuery<TElement>(InterceptExpresion(expression)));
 
-      public IQueryable CreateQuery(Expression expression) =>
-         new InterceptedQueryable(this, _inner.CreateQuery(InterceptExpresion(expression)));
+      public IQueryable CreateQuery(Expression expression) => new InterceptedQueryable(this, _inner.CreateQuery(InterceptExpresion(expression)));
 
       public TResult Execute<TResult>(Expression expression) => _inner.Execute<TResult>(InterceptExpresion(expression));
 

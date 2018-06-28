@@ -18,13 +18,17 @@ namespace Domain
 
       public override int GetHashCode()
       {
-         if (_hashCode.HasValue) return _hashCode.Value;
+         if (_hashCode.HasValue)
+         {
+            return _hashCode.Value;
+         }
 
          bool thisIsTransient = Equals(Id, default);
 
          if (thisIsTransient)
          {
             _hashCode = base.GetHashCode();
+
             return _hashCode.Value;
          }
 

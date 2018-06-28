@@ -1,22 +1,10 @@
 namespace Domain.School
 {
-   public class ExamDifficulty : Enumeration<ExamDifficulty, string>
+   public class ExamDifficulty : Enumeration<ExamDifficulty>
    {
-      public ExamDifficulty(string value) : base(value) { }
-      public ExamDifficulty(string value, string displayName) : base(value, displayName) { }
+      public static readonly ExamDifficulty Easy = new ExamDifficulty(nameof(Easy), "latwy", 1);
+      public static readonly ExamDifficulty Medium = new ExamDifficulty(nameof(Medium), "sredni", 2);
+      public static readonly ExamDifficulty Hard = new ExamDifficulty(nameof(Hard), "trudny", 3);
 
-      public static ExamDifficulty Hard => new ExamDifficulty(nameof(Hard), "trudny");
-      public static ExamDifficulty Medium => new ExamDifficulty(nameof(Medium), "sredni");
-      public static ExamDifficulty Easy => new ExamDifficulty(nameof(Easy), "latwy");
-
-      public static bool operator ==(ExamDifficulty left, string right)
-      {
-         return left.Value == right;
-      }
-
-      public static bool operator !=(ExamDifficulty left, string right)
-      {
-         return !(left == right);
-      }
-   }
+      private ExamDifficulty(string key, string value, int order) : base(key, value, order) { } }
 }

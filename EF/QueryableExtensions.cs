@@ -21,13 +21,13 @@ namespace EFC
 
       public static string ToSql<TEntity>(this IQueryable<TEntity> query) where TEntity : class
       {
-         var queryCompiler = (QueryCompiler) QueryCompilerField.GetValue(query.Provider);
-         var modelGenerator = (QueryModelGenerator) QueryModelGeneratorField.GetValue(queryCompiler);
+         var queryCompiler = (QueryCompiler)QueryCompilerField.GetValue(query.Provider);
+         var modelGenerator = (QueryModelGenerator)QueryModelGeneratorField.GetValue(queryCompiler);
          QueryModel queryModel = modelGenerator.ParseQuery(query.Expression);
-         var database = (IDatabase) DataBaseField.GetValue(queryCompiler);
-         var databaseDependencies = (DatabaseDependencies) DatabaseDependenciesField.GetValue(database);
+         var database = (IDatabase)DataBaseField.GetValue(queryCompiler);
+         var databaseDependencies = (DatabaseDependencies)DatabaseDependenciesField.GetValue(database);
          QueryCompilationContext queryCompilationContext = databaseDependencies.QueryCompilationContextFactory.Create(false);
-         var modelVisitor = (RelationalQueryModelVisitor) queryCompilationContext.CreateQueryModelVisitor();
+         var modelVisitor = (RelationalQueryModelVisitor)queryCompilationContext.CreateQueryModelVisitor();
          modelVisitor.CreateQueryExecutor<TEntity>(queryModel);
          string sql = modelVisitor.Queries.First().ToString();
 

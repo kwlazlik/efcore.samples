@@ -1,17 +1,25 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Domain;
 using Domain.School;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EFC
 {
    public class Context : DbContext
    {
       public DbSet<Exam> Exams { get; set; }
+
       public DbSet<Student> Students { get; set; }
+
       public DbSet<StudentExamGrade> StudentExams { get; set; }
+
       public DbSet<Subject> Subjects { get; set; }
+
       public DbSet<SchoolClass> SchoolClasses { get; set; }
 
       protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -28,18 +36,23 @@ namespace EFC
       {
          base.OnModelCreating(modelBuilder);
 
-         //modelBuilder.Entity<Exam>().OwnsOne(e => e.Difficulty).Property(d => d.Value).HasColumnName(nameof(Exam.Difficulty));
-         modelBuilder.Entity<Exam>().Property(e => e.Difficulty).HasConversion(new ExamDifficultyToStringConverter());
+         modelBuilder.EntityEnumeration<ExamDifficulty>();
+         modelBuilder.EntityEnumeration<Grade>().HasDiscriminator().HasValue<Grade>("m").HasValue<GoodGrade>("g").HasValue<BaadGrade>("b");
+
+         modelBuilder.Entity<Exam>().HasOne(e => e.Difficulty).WithMany().IsRequired();
          modelBuilder.Entity<Exam>().Property(e => e.Time).HasConversion(v => v.Ticks, v => new TimeSpan(v));
 
-         modelBuilder.Entity<StudentExamGrade>().OwnsOne(e => e.Grade).Property(d => d.Value).HasColumnName(nameof(StudentExamGrade.Grade));
-         //modelBuilder.Entity<StudentExam>().Property(e => e.Grade).HasColumnName(nameof(StudentExam.Grade)).HasConversion(e => e.Value, s => new StudentExamGrade(s));
+         modelBuilder.Entity<StudentExamGrade>().HasOne(e => e.Grade).WithMany().IsRequired();;
       }
-   }
 
-   internal class ExamDifficultyToStringConverter : ValueConverter<ExamDifficulty, string>
-   {
-      public ExamDifficultyToStringConverter(ConverterMappingHints mappingHints = null)
-         : base(v => v.Value, v => new ExamDifficulty(v), mappingHints) { }
+      public override int SaveChanges()
+      {
+         foreach (EntityEntry entityEntry in ChangeTracker.Entries().Where(e => e.State == EntityState.Added && e.Entity.GetType().BaseType?.GetGenericTypeDefinition() == typeof(Enumeration<>)))
+         {
+            entityEntry.State = EntityState.Modified;
+         }
+
+         return base.SaveChanges();
+      }
    }
 }

@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.School;
 using EFC;
 using EFC.Interception;
@@ -8,13 +10,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TestProject.Core
 {
-   public class StdentViewModel
+   public class ExamDifficultyViewModel
+   {
+      public string Key { get; set; }
+
+      public string Value { get; set; }
+   }
+
+   public class ExamViewModel
+   {
+      public string Title { get; set; }
+
+      public ExamDifficultyViewModel Difficulty { get; set; }
+   }
+
+   public class StudentViewModel
    {
       public string FirstName { get; set; }
 
       public string LastName { get; set; }
 
-      public int ExamGradessCount { get; set; }
+      public int ExamGradesCount { get; set; }
    }
 
    public class ClassViewModel
@@ -26,20 +42,37 @@ namespace TestProject.Core
    {
       private static void Main(string[] args)
       {
-         Mapper.Initialize(c => { c.CreateMap<Student, StdentViewModel>(); });
+         var xw = ExamDifficulty.List;
 
+         Mapper.Initialize(c =>
+         {
+            c.CreateMap<Student, StudentViewModel>();
+            c.CreateMap<Exam, ExamViewModel>();
+            c.CreateMap<ExamDifficulty, ExamDifficultyViewModel>();
+         });
 
          using (var context = new Context())
          {
-           // context.Database.EnsureDeleted();
-           // context.Database.EnsureCreated();
+            var x = context.Exams
+              .Where(e => e.Difficulty == ExamDifficulty.Hard)
+              .ToList();
 
-            Subject math = new Subject
+            foreach (var exam in x)
+            {
+               exam.Difficulty = ExamDifficulty.Easy;
+            }
+            
+            context.SaveChanges();
+         }
+
+         using (var context = new Context())
+         {
+            var math = new Subject
             {
                Name = "math"
             };
 
-            Exam mathExam = new Exam
+            var mathExam = new Exam
             {
                Difficulty = ExamDifficulty.Hard,
                Subject = math,
@@ -47,7 +80,7 @@ namespace TestProject.Core
                Time = new TimeSpan(0, 2, 30, 0)
             };
 
-            Exam programmingExam = new Exam
+            var programmingExam = new Exam
             {
                Difficulty = ExamDifficulty.Medium,
                Subject = math,
@@ -55,13 +88,13 @@ namespace TestProject.Core
                Time = new TimeSpan(0, 1, 30, 0)
             };
 
-            StudentExamGrade mathExamGrade = new StudentExamGrade
+            var mathExamGrade = new StudentExamGrade
             {
                Exam = mathExam,
                Grade = Grade.A
             };
 
-            StudentExamGrade programmingExamGrade = new StudentExamGrade
+            var programmingExamGrade = new StudentExamGrade
             {
                Exam = programmingExam,
                Grade = Grade.B
@@ -79,27 +112,38 @@ namespace TestProject.Core
                Number = "1A"
             }.AddStudents(student);
 
-            context.Add(cls);
+            context.Update(cls);
 
             context.SaveChanges();
          }
 
          using (var context = new Context())
          {
-            //var sql = context.Exams.FromSql("select * from Exams").Select(e => e.Title).ToList();
-
-            TimeSpan ts = new TimeSpan(0, 3, 0, 0);
-            var exam = context.Exams
-              //.FixExpression(new DebugExpressionVisitor())
+            //działa
+            var ts = new TimeSpan(0, 3, 0, 0);
+            List<Exam> exam = context.Exams
+              .FixExpression(new DebugExpressionVisitor())
               .Where(e => e.Time > ts)
               .ToList();
 
-            // var exam2 = context.Exams
-            //  // .FixExpression(new DebugExpressionVisitor())
-            //   .Where(e => e.Difficulty == ExamDifficulty.Hard)
-            //   .ToList();
+            //nie działa
+            var exam2 = context.Exams
+              .FixExpression(new DebugExpressionVisitor())
+              .Where(e => e.Difficulty == ExamDifficulty.Hard)
+              .ToList();
 
+            //działa
+            List<StudentViewModel> vm = context.Students.Select(s => new StudentViewModel
+               {
+                  ExamGradesCount = s.ExamGrades.Count(),
+                  FirstName = s.FirstName,
+                  LastName = s.LastName
+               })
+              .FixExpression(new DebugExpressionVisitor())
+              .ToList();
 
+            //działa ale Student.ExamGrades musi być IEnumerable<>
+            List<StudentViewModel> vm2 = context.Students.ProjectTo<StudentViewModel>(new DebugExpressionVisitor()).ToList();
          }
       }
    }

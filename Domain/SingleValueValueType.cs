@@ -7,12 +7,10 @@ namespace Domain
       TValue Value { get; }
    }
 
-   public abstract class SingleValueValueType<TValueType, TValue> : ValueType<TValueType>, ISingleValueValueType<TValue> where TValueType : ValueType<TValueType>
+   public abstract class SingleValueValueType<TValueType, TValue> : ValueType<TValueType>, ISingleValueValueType<TValue>
+      where TValueType : ValueType<TValueType>
    {
-      protected SingleValueValueType(TValue value)
-      {
-         Value = value;
-      }
+      protected SingleValueValueType(TValue value) => Value = value;
 
       public TValue Value { get; }
 

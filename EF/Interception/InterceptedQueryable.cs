@@ -6,7 +6,6 @@ using System.Linq.Expressions;
 
 namespace EFC.Interception
 {
-
    public sealed class InterceptedQueryable : IOrderedQueryable
    {
       private readonly IQueryable _inner;

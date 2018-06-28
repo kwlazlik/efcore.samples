@@ -14,6 +14,7 @@ namespace Common.Results
       public string Error => IsFail ? _error : throw new InvalidOperationException("Can not get error for ok result.");
 
       public bool IsOk => string.IsNullOrEmpty(_error);
+
       public bool IsFail => !IsOk;
 
       public static bool operator true(Result result) => result.IsOk;
@@ -42,15 +43,19 @@ namespace Common.Results
          List<Result> failedResults = results.Where(x => x.IsFail).ToList();
 
          if (!failedResults.Any())
+         {
             return Ok();
+         }
 
          string errorMessage = string.Join(errorMessagesSeparator, failedResults.Select(x => x.Error));
+
          return Fail(errorMessage);
       }
 
       public static Result Combine<T>(string errorMessagesSeparator, params Result<T>[] results)
       {
-         Result[] untyped = results.Select(result => (Result) result).ToArray();
+         Result[] untyped = results.Select(result => (Result)result).ToArray();
+
          return Combine(errorMessagesSeparator, untyped);
       }
    }
@@ -66,11 +71,15 @@ namespace Common.Results
       public string Error => IsFail ? _error : throw new InvalidOperationException("Can not get error for ok result.");
 
       public bool IsOk => string.IsNullOrEmpty(_error);
+
       public bool IsFail => !IsOk;
 
       internal Result(TValue value)
       {
-         if (value == null) throw new ArgumentNullException(nameof(value));
+         if (value == null)
+         {
+            throw new ArgumentNullException(nameof(value));
+         }
 
          _value = value;
          _error = null;
@@ -104,11 +113,15 @@ namespace Common.Results
       public TError Error => IsFail ? _error : throw new InvalidOperationException("Can not get error for ok result.");
 
       public bool IsOk => _error == null;
+
       public bool IsFail => !IsOk;
 
       internal Result(TValue value)
       {
-         if (value == null) throw new ArgumentNullException(nameof(value));
+         if (value == null)
+         {
+            throw new ArgumentNullException(nameof(value));
+         }
 
          _value = value;
          _error = null;

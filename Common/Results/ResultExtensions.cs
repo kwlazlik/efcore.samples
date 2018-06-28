@@ -16,21 +16,30 @@ namespace Common.Results
 
       public static Result OnSuccess(this Result result, Action action)
       {
-         if (result) action();
+         if (result)
+         {
+            action();
+         }
 
          return result;
       }
 
       public static Result OnFailure(this Result result, Action action)
       {
-         if (result.IsFail) action();
+         if (result.IsFail)
+         {
+            action();
+         }
 
          return result;
       }
 
       public static Result OnFailure(this Result result, Action<string> action)
       {
-         if (result.IsFail) action(result.Error);
+         if (result.IsFail)
+         {
+            action(result.Error);
+         }
 
          return result;
       }
@@ -40,14 +49,21 @@ namespace Common.Results
       public static Result OnBoth(this Result result, Action action)
       {
          action();
+
          return result;
       }
 
       public static Result Ensure(this Result result, Func<bool> predicate, string errorMessage)
       {
-         if (result.IsFail) return Result.Fail(result.Error);
+         if (result.IsFail)
+         {
+            return Result.Fail(result.Error);
+         }
 
-         if (!predicate()) return Result.Fail(errorMessage);
+         if (!predicate())
+         {
+            return Result.Fail(errorMessage);
+         }
 
          return Result.Ok();
       }
@@ -64,14 +80,20 @@ namespace Common.Results
 
       public static Result<T> OnFailure<T>(this Result<T> result, Action action)
       {
-         if (result.IsFail) action();
+         if (result.IsFail)
+         {
+            action();
+         }
 
          return result;
       }
 
       public static Result<T> OnFailure<T>(this Result<T> result, Action<string> action)
       {
-         if (result.IsFail) action(result.Error);
+         if (result.IsFail)
+         {
+            action(result.Error);
+         }
 
          return result;
       }
@@ -80,9 +102,15 @@ namespace Common.Results
 
       public static Result<T> Ensure<T>(this Result<T> result, Func<T, bool> predicate, string errorMessage)
       {
-         if (result.IsFail) return Result.Fail<T>(result.Error);
+         if (result.IsFail)
+         {
+            return Result.Fail<T>(result.Error);
+         }
 
-         if (!predicate(result.Value)) return Result.Fail<T>(errorMessage);
+         if (!predicate(result.Value))
+         {
+            return Result.Fail<T>(errorMessage);
+         }
 
          return Result.Ok(result.Value);
       }
@@ -95,7 +123,10 @@ namespace Common.Results
 
       public static Result<T> OnSuccess<T>(this Result<T> result, Action<T> action)
       {
-         if (result) action(result.Value);
+         if (result)
+         {
+            action(result.Value);
+         }
 
          return result;
       }
@@ -118,7 +149,10 @@ namespace Common.Results
 
       public static Result<TValue, TError> OnSuccess<TValue, TError>(this Result<TValue, TError> result, Action<TValue> action) where TError : class
       {
-         if (result) action(result.Value);
+         if (result)
+         {
+            action(result.Value);
+         }
 
          return result;
       }
@@ -126,7 +160,10 @@ namespace Common.Results
       public static Result<TValue, TError> OnFailure<TValue, TError>(this Result<TValue, TError> result,
                                                                      Action action) where TError : class
       {
-         if (result.IsFail) action();
+         if (result.IsFail)
+         {
+            action();
+         }
 
          return result;
       }
@@ -134,21 +171,29 @@ namespace Common.Results
       public static Result<TValue, TError> OnFailure<TValue, TError>(this Result<TValue, TError> result,
                                                                      Action<TError> action) where TError : class
       {
-         if (result.IsFail) action(result.Error);
+         if (result.IsFail)
+         {
+            action(result.Error);
+         }
 
          return result;
       }
 
       public static TValue OnBoth<TValue, TError>(this Result<TValue, TError> result,
-                                                  Func<Result<TValue, TError>, TValue> func) where TError : class =>
-         func(result);
+                                                  Func<Result<TValue, TError>, TValue> func) where TError : class => func(result);
 
       public static Result<TValue, TError> Ensure<TValue, TError>(this Result<TValue, TError> result,
                                                                   Func<TValue, bool> predicate, TError errorObject) where TError : class
       {
-         if (result.IsFail) return Result.Fail<TValue, TError>(result.Error);
+         if (result.IsFail)
+         {
+            return Result.Fail<TValue, TError>(result.Error);
+         }
 
-         if (!predicate(result.Value)) return Result.Fail<TValue, TError>(errorObject);
+         if (!predicate(result.Value))
+         {
+            return Result.Fail<TValue, TError>(errorObject);
+         }
 
          return Result.Ok<TValue, TError>(result.Value);
       }
