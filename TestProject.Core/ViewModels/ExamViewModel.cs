@@ -1,3 +1,5 @@
+using Domain.School;
+
 namespace TestProject.Core.ViewModels
 {
    public class ExamViewModel
@@ -5,5 +7,7 @@ namespace TestProject.Core.ViewModels
       public string Title { get; set; }
 
       public ExamDifficultyViewModel Difficulty { get; set; }
+
+      public ExamFlag Flag { get; set; }
    }
 }

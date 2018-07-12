@@ -57,6 +57,8 @@ namespace TestProject.Core
 
             //działa ale Student.ExamGrades musi być IEnumerable<>
             List<StudentViewModel> vm2 = context.Students.ProjectTo<StudentViewModel>(new DebugExpressionVisitor()).ToList();
+
+            List<ExamViewModel> examViewModels = context.Exams.Where(e => e.Flag == ExamFlag.ExamFlag1).ProjectTo<ExamViewModel>().ToList();
          }
       }
 
