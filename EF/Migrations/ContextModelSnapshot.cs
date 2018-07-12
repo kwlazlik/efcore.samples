@@ -36,6 +36,9 @@ namespace EFC.Migrations
                     b.Property<string>("DifficultyKey")
                         .IsRequired();
 
+                    b.Property<string>("Flag")
+                        .IsRequired();
+
                     b.Property<int?>("SubjectId");
 
                     b.Property<long>("Time");
@@ -89,15 +92,7 @@ namespace EFC.Migrations
 
                     b.ToTable("Grade");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("m");
-
-                    b.HasData(
-                        new { Key = "A", Order = 1, Value = "bardzodobry" },
-                        new { Key = "B", Order = 2, Value = "dobry" },
-                        new { Key = "C", Order = 3, Value = "dostateczny" },
-                        new { Key = "D", Order = 4, Value = "dopuszczający" },
-                        new { Key = "E", Order = 5, Value = "niedostateczny" }
-                    );
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Grade");
                 });
 
             modelBuilder.Entity("Domain.School.SchoolClass", b =>
@@ -193,14 +188,19 @@ namespace EFC.Migrations
                     b.ToTable("Subjects");
                 });
 
-            modelBuilder.Entity("Domain.School.BaadGrade", b =>
+            modelBuilder.Entity("Domain.School.BadGrade", b =>
                 {
                     b.HasBaseType("Domain.School.Grade");
 
 
-                    b.ToTable("BaadGrade");
+                    b.ToTable("BadGrade");
 
-                    b.HasDiscriminator().HasValue("b");
+                    b.HasDiscriminator().HasValue("bg");
+
+                    b.HasData(
+                        new { Key = "D", Order = 4, Value = "dopuszczający" },
+                        new { Key = "E", Order = 5, Value = "niedostateczny" }
+                    );
                 });
 
             modelBuilder.Entity("Domain.School.GoodGrade", b =>
@@ -210,7 +210,26 @@ namespace EFC.Migrations
 
                     b.ToTable("GoodGrade");
 
-                    b.HasDiscriminator().HasValue("g");
+                    b.HasDiscriminator().HasValue("gg");
+
+                    b.HasData(
+                        new { Key = "A", Order = 1, Value = "bardzodobry" },
+                        new { Key = "B", Order = 2, Value = "dobry" }
+                    );
+                });
+
+            modelBuilder.Entity("Domain.School.MediumGrade", b =>
+                {
+                    b.HasBaseType("Domain.School.Grade");
+
+
+                    b.ToTable("MediumGrade");
+
+                    b.HasDiscriminator().HasValue("mg");
+
+                    b.HasData(
+                        new { Key = "C", Order = 3, Value = "dostateczny" }
+                    );
                 });
 
             modelBuilder.Entity("Domain.School.Exam", b =>

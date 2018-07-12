@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EFC.Migrations
 {
-    public partial class Init : Migration
+    public partial class X : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -101,7 +101,8 @@ namespace EFC.Migrations
                     DbModifiedAt = table.Column<DateTime>(nullable: false),
                     DbModifiedBy = table.Column<string>(nullable: true),
                     Title = table.Column<string>(nullable: true),
-                    DifficultyKey = table.Column<string>(nullable: true),
+                    Flag = table.Column<string>(nullable: false),
+                    DifficultyKey = table.Column<string>(nullable: false),
                     SubjectId = table.Column<int>(nullable: true),
                     Time = table.Column<long>(nullable: false)
                 },
@@ -113,7 +114,7 @@ namespace EFC.Migrations
                         column: x => x.DifficultyKey,
                         principalTable: "ExamDifficulty",
                         principalColumn: "Key",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Exams_Subjects_SubjectId",
                         column: x => x.SubjectId,
@@ -132,7 +133,7 @@ namespace EFC.Migrations
                     DbCreatedBy = table.Column<string>(nullable: true),
                     DbModifiedAt = table.Column<DateTime>(nullable: false),
                     DbModifiedBy = table.Column<string>(nullable: true),
-                    GradeKey = table.Column<string>(nullable: true),
+                    GradeKey = table.Column<string>(nullable: false),
                     StudentId = table.Column<int>(nullable: true),
                     ExamId = table.Column<int>(nullable: true)
                 },
@@ -150,7 +151,7 @@ namespace EFC.Migrations
                         column: x => x.GradeKey,
                         principalTable: "Grade",
                         principalColumn: "Key",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_StudentExams_Students_StudentId",
                         column: x => x.StudentId,
@@ -174,11 +175,11 @@ namespace EFC.Migrations
                 columns: new[] { "Key", "Discriminator", "Order", "Value" },
                 values: new object[,]
                 {
-                    { "A", "m", 1, "bardzodobry" },
-                    { "B", "m", 2, "dobry" },
-                    { "C", "m", 3, "dostateczny" },
-                    { "D", "m", 4, "dopuszczający" },
-                    { "E", "m", 5, "niedostateczny" }
+                    { "D", "bg", 4, "dopuszczający" },
+                    { "E", "bg", 5, "niedostateczny" },
+                    { "A", "gg", 1, "bardzodobry" },
+                    { "B", "gg", 2, "dobry" },
+                    { "C", "mg", 3, "dostateczny" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -37,10 +37,16 @@ namespace EFC
          base.OnModelCreating(modelBuilder);
 
          modelBuilder.EntityEnumeration<ExamDifficulty>();
-         modelBuilder.EntityEnumeration<Grade>().HasDiscriminator().HasValue<Grade>("m").HasValue<GoodGrade>("g").HasValue<BaadGrade>("b");
+
+         modelBuilder.EntityEnumeration<Grade>().HasDiscriminator().HasValue<GoodGrade>("gg").HasValue<MediumGrade>("mg").HasValue<BadGrade>("bg");
+         modelBuilder.EntityEnumeration<GoodGrade, Grade>();
+         modelBuilder.EntityEnumeration<MediumGrade, Grade>();
+         modelBuilder.EntityEnumeration<BadGrade, Grade>();
+
 
          modelBuilder.Entity<Exam>().HasOne(e => e.Difficulty).WithMany().IsRequired();
          modelBuilder.Entity<Exam>().Property(e => e.Time).HasConversion(v => v.Ticks, v => new TimeSpan(v));
+         modelBuilder.Entity<Exam>().Property(e => e.Flag).HasConversion<string>();
 
          modelBuilder.Entity<StudentExamGrade>().HasOne(e => e.Grade).WithMany().IsRequired();;
       }

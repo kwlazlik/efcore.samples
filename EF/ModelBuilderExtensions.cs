@@ -18,5 +18,13 @@ namespace EFC
 
          return entityTypeBuilder;
       }
+
+      public static EntityTypeBuilder<TEnumeration> EntityEnumeration<TEnumeration, TBaseEnumeration>(this ModelBuilder modelBuilder) where TEnumeration : Enumeration<TBaseEnumeration> where TBaseEnumeration : Enumeration<TBaseEnumeration>
+      {
+         EntityTypeBuilder<TEnumeration> entityTypeBuilder = modelBuilder.Entity<TEnumeration>();
+         entityTypeBuilder.HasData(Enumeration<TBaseEnumeration>.List.Where(e => e.GetType() == typeof(TEnumeration)).OfType<TEnumeration>().ToArray());
+         entityTypeBuilder.HasBaseType<TBaseEnumeration>();
+         return entityTypeBuilder;
+      }
    }
 }

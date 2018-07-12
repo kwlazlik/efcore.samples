@@ -6,6 +6,8 @@ namespace Domain.School
    {
       public string Title { get; set; }
 
+      public ExamFlag Flag { get; set; }
+
       public ExamDifficulty Difficulty { get; set; }
 
       public Subject Subject { get; set; }
