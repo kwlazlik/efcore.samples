@@ -4,14 +4,16 @@ using EFC;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EFC.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20180713194412_Seq")]
+    partial class Seq
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,24 +245,6 @@ namespace EFC.Migrations
                     b.HasOne("Domain.School.Subject", "Subject")
                         .WithMany("Exams")
                         .HasForeignKey("SubjectId");
-
-                    b.OwnsOne("Domain.School.ExamIdentifier", "Identifier", b1 =>
-                        {
-                            b1.Property<int?>("ExamId")
-                                .ValueGeneratedOnAdd()
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                            b1.Property<string>("Value")
-                                .ValueGeneratedOnAdd()
-                                .HasDefaultValueSql("'Ident #' + CAST(NEXT VALUE FOR testsequence AS varchar(max))");
-
-                            b1.ToTable("Exams");
-
-                            b1.HasOne("Domain.School.Exam")
-                                .WithOne("Identifier")
-                                .HasForeignKey("Domain.School.ExamIdentifier", "ExamId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
                 });
 
             modelBuilder.Entity("Domain.School.Student", b =>

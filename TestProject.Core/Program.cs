@@ -6,6 +6,7 @@ using AutoMapper.QueryableExtensions;
 using Domain.School;
 using EFC;
 using EFC.Interception;
+using Microsoft.EntityFrameworkCore;
 using TestProject.Core.ViewModels;
 
 namespace TestProject.Core
@@ -74,7 +75,8 @@ namespace TestProject.Core
                Difficulty = ExamDifficulty.Hard,
                Subject = math,
                Title = "Algebra exam",
-               Time = new TimeSpan(0, 2, 30, 0)
+               Time = new TimeSpan(0, 2, 30, 0),
+               Identifier = ExamIdentifier.Empty
             };
 
             var programmingExam = new Exam
@@ -82,7 +84,8 @@ namespace TestProject.Core
                Difficulty = ExamDifficulty.Medium,
                Subject = math,
                Title = "C# programming",
-               Time = new TimeSpan(0, 1, 30, 0)
+               Time = new TimeSpan(0, 1, 30, 0),
+               Identifier = new ExamIdentifier(){Value = "alamakota"}
             };
 
             var mathExamGrade = new StudentExamGrade

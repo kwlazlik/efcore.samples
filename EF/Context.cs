@@ -48,14 +48,19 @@ namespace EFC
          modelBuilder.Entity<Exam>().Property(e => e.Time).HasConversion(v => v.Ticks, v => new TimeSpan(v));
          modelBuilder.Entity<Exam>().Property(e => e.Flag).HasConversion<string>();
 
-         modelBuilder.Entity<StudentExamGrade>().HasOne(e => e.Grade).WithMany().IsRequired();;
+
+         modelBuilder.Entity<StudentExamGrade>().HasOne(e => e.Grade).WithMany().IsRequired();
+
+         modelBuilder.HasSequence("testsequence");
+
+         modelBuilder.Entity<Exam>().OwnsOne(e => e.Identifier).Property(i => i.Value).HasDefaultValueSql("'Ident #' + CAST(NEXT VALUE FOR testsequence AS varchar(max))");
       }
 
       public override int SaveChanges()
       {
-         foreach (EntityEntry entityEntry in ChangeTracker.Entries().Where(e => e.State == EntityState.Added && e.Entity.GetType().BaseType?.GetGenericTypeDefinition() == typeof(Enumeration<>)))
+         foreach (EntityEntry entityEntry in ChangeTracker.Entries().Where(e => e.State == EntityState.Added && e.Entity.GetType().BaseType.IsGenericType && e.Entity.GetType().BaseType?.GetGenericTypeDefinition() == typeof(Enumeration<>)))
          {
-            entityEntry.State = EntityState.Modified;
+            entityEntry.State = EntityState.Unchanged;
          }
 
          return base.SaveChanges();

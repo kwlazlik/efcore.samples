@@ -11,6 +11,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20180713201551_ExamIdentifier.cs" />
+    <Compile Remove="Migrations\20180713201706_ExamIdentifier.cs" />
+    <Compile Remove="Migrations\20180713201857_ExamIdentifier.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DelegateDecompiler.EntityFrameworkCore" Version="0.24.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.1" />
