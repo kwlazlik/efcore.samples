@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using AutoMapper.Extensions.ExpressionMapping;
 using AutoMapper.QueryableExtensions;
 using Domain.School;
 using EFC;
 using EFC.Interception;
-using Microsoft.EntityFrameworkCore;
 using TestProject.Core.ViewModels;
 
 namespace TestProject.Core
@@ -21,6 +21,8 @@ namespace TestProject.Core
             c.CreateMap<Exam, ExamViewModel>();
             c.CreateMap<ExamDifficulty, ExamDifficultyViewModel>();
          });
+
+         QueryViewMmodelsSamples();
 
          CustomEnumerationsSamples();
 
@@ -41,7 +43,7 @@ namespace TestProject.Core
               .ToList();
 
             //nie działa
-            var exam2 = context.Exams
+            List<Exam> exam2 = context.Exams
               .FixExpression(new DebugExpressionVisitor())
               .Where(e => e.Difficulty == ExamDifficulty.Hard)
               .ToList();
@@ -63,12 +65,37 @@ namespace TestProject.Core
          }
       }
 
+      private static void QueryViewMmodelsSamples()
+      {
+         using (var context = new Context())
+         {
+            List<ExamViewModel> list = context.Exams.ProjectTo<ExamViewModel>().Where(vm => vm.SubjectName.StartsWith("math")).ToList();
+            List<ExamViewModel> list2 = context.Exams.Where(vm => vm.Subject.Name == "math").ProjectTo<ExamViewModel>().ToList();
+
+            int i = 0;
+            List<ExamViewModel> list3 = context.Exams
+               .UseAsDataSource()
+               .For<ExamViewModel>()
+               .OnEnumerated(vms =>
+               {
+                  foreach (ExamViewModel vm in vms.OfType<ExamViewModel>())
+                  {
+                     vm.Ignored = i++;
+                  }
+               })
+               .Where(vm => vm.SubjectName.StartsWith("math"))
+               .ToList();
+         }
+      }
+
       private static void UpdataingDataSample()
       {
          using (var context = new Context())
          {
             var math = new Subject
-               { Name = "math" };
+            {
+               Name = "math"
+            };
 
             var mathExam = new Exam
             {
@@ -85,7 +112,10 @@ namespace TestProject.Core
                Subject = math,
                Title = "C# programming",
                Time = new TimeSpan(0, 1, 30, 0),
-               Identifier = new ExamIdentifier(){Value = "alamakota"}
+               Identifier = new ExamIdentifier
+               {
+                  Value = "alamakota"
+               }
             };
 
             var mathExamGrade = new StudentExamGrade
@@ -107,7 +137,10 @@ namespace TestProject.Core
             }.AddExamGrades(mathExamGrade, programmingExamGrade);
 
 
-            SchoolClass cls = new SchoolClass { Number = "1A" }.AddStudents(student);
+            SchoolClass cls = new SchoolClass
+            {
+               Number = "1A"
+            }.AddStudents(student);
 
             context.Update(cls);
 
@@ -119,11 +152,11 @@ namespace TestProject.Core
       {
          using (var context = new Context())
          {
-            var exams = context.Exams
+            List<Exam> exams = context.Exams
               .Where(e => e.Difficulty == ExamDifficulty.Hard)
               .ToList();
 
-            foreach (var exam in exams)
+            foreach (Exam exam in exams)
             {
                exam.Difficulty = ExamDifficulty.Easy;
             }
