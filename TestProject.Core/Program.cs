@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using AutoMapper.Extensions.ExpressionMapping;
 using AutoMapper.QueryableExtensions;
+using DelegateDecompiler;
 using Domain.School;
 using EFC;
 using EFC.Interception;
@@ -20,6 +21,7 @@ namespace TestProject.Core
             c.CreateMap<Student, StudentViewModel>();
             c.CreateMap<Exam, ExamViewModel>();
             c.CreateMap<ExamDifficulty, ExamDifficultyViewModel>();
+            c.IncludeSourceExtensionMethods(typeof(ExamExtension));
          });
 
          QueryViewMmodelsSamples();
@@ -69,8 +71,8 @@ namespace TestProject.Core
       {
          using (var context = new Context())
          {
-            List<ExamViewModel> list = context.Exams.ProjectTo<ExamViewModel>().Where(vm => vm.SubjectName.StartsWith("math")).ToList();
-            List<ExamViewModel> list2 = context.Exams.Where(vm => vm.Subject.Name == "math").ProjectTo<ExamViewModel>().ToList();
+            List<ExamViewModel> list = context.Exams.ProjectTo<ExamViewModel>().Where(vm => vm.SubjectName.StartsWith("math")).Decompile().ToList();
+            List<ExamViewModel> list2 = context.Exams.Where(vm => vm.Subject.Name == "math").ProjectTo<ExamViewModel>().Decompile().ToList();
 
             int i = 0;
             List<ExamViewModel> list3 = context.Exams
@@ -84,6 +86,7 @@ namespace TestProject.Core
                   }
                })
                .Where(vm => vm.SubjectName.StartsWith("math"))
+               .Decompile()
                .ToList();
          }
       }

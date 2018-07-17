@@ -1,4 +1,5 @@
 using System;
+using DelegateDecompiler;
 
 namespace Domain.School
 {
@@ -22,5 +23,11 @@ namespace Domain.School
       public Subject Subject { get; set; }
 
       public TimeSpan Time { get; set; }
+   }
+
+   public static class ExamExtension
+   {
+      [Computed]
+      public static string TitleExt(this Exam exam) => exam.Title + "alamakota";
    }
 }

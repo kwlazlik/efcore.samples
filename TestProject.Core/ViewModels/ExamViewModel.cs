@@ -15,5 +15,7 @@ namespace TestProject.Core.ViewModels
 
       [IgnoreMap]
       public int Ignored { get; set; }
+
+      public string TitleExt { get; set; }
    }
 }
