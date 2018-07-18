@@ -19,8 +19,9 @@ namespace TestProject.Core
          Mapper.Initialize(c =>
          {
             c.CreateMap<Student, StudentViewModel>();
-            c.CreateMap<Exam, ExamViewModel>();
+            c.CreateMap<IExam, ExamViewModel>();
             c.CreateMap<ExamDifficulty, ExamDifficultyViewModel>();
+
             c.IncludeSourceExtensionMethods(typeof(ExamExtension));
          });
 

@@ -10,7 +10,32 @@ namespace Domain.School
       public string Value { get; set; }
    }
 
-   public class Exam : AuditableEntity<Exam>
+   public interface IExam 
+   {
+      ExamIdentifier Identifier { get; set; }
+
+      string Title { get; set; }
+
+      ExamFlag Flag { get; set; }
+
+      ExamDifficulty Difficulty { get; set; }
+
+      Subject Subject { get; set; }
+
+      TimeSpan Time { get; set; }
+
+      DateTime DbModifiedAt { get; }
+
+      string DbModifiedBy { get; }
+
+      DateTime DbCreatedAt { get; }
+
+      string DbCreatedBy { get; }
+
+      int Id { get; }
+   }
+
+   public class Exam : AuditableEntity<Exam>, IExam
    {
       public ExamIdentifier Identifier { get; set; }
 
@@ -28,6 +53,6 @@ namespace Domain.School
    public static class ExamExtension
    {
       [Computed]
-      public static string TitleExt(this Exam exam) => exam.Title + "alamakota";
+      public static string TitleExt(this IExam exam) => exam.Title + "alamakota";
    }
 }
