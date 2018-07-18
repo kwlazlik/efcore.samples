@@ -33,7 +33,6 @@ namespace Common.Results
 
       public static Result<TValue, TError> Fail<TValue, TError>(TError error) where TError : class => new Result<TValue, TError>(default, error);
 
-
       public static Result Combine(params Result[] results) => Combine(", ", results);
 
       public static Result Combine<T>(params Result<T>[] results) => Combine(", ", results);
@@ -100,7 +99,6 @@ namespace Common.Results
       public static implicit operator Result<TValue, string>(Result<TValue> self) =>
          self ? Result.Ok<TValue, string>(self.Value) : Result.Fail<TValue, string>(self.Error);
    }
-
 
    [Serializable]
    public struct Result<TValue, TError> where TError : class

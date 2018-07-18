@@ -1,6 +1,6 @@
 using System;
 
-namespace Domain.School 
+namespace Domain.School
 {
    [Flags]
    public enum ExamFlag

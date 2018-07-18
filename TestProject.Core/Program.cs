@@ -77,18 +77,18 @@ namespace TestProject.Core
 
             int i = 0;
             List<ExamViewModel> list3 = context.Exams
-               .UseAsDataSource()
-               .For<ExamViewModel>()
-               .OnEnumerated(vms =>
+              .UseAsDataSource()
+              .For<ExamViewModel>()
+              .OnEnumerated(vms =>
                {
                   foreach (ExamViewModel vm in vms.OfType<ExamViewModel>())
                   {
                      vm.Ignored = i++;
                   }
                })
-               .Where(vm => vm.SubjectName.StartsWith("math"))
-               .Decompile()
-               .ToList();
+              .Where(vm => vm.SubjectName.StartsWith("math"))
+              .Decompile()
+              .ToList();
          }
       }
 
@@ -139,7 +139,6 @@ namespace TestProject.Core
                FirstName = "ala",
                LastName = "makota"
             }.AddExamGrades(mathExamGrade, programmingExamGrade);
-
 
             SchoolClass cls = new SchoolClass
             {

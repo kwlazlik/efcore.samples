@@ -13,13 +13,14 @@ namespace Domain
 
       public override bool Equals(object other) => Equals(other as ValueType<TValueType>);
 
-      public override int GetHashCode() => GetEqualityComponents().Aggregate(1, (current, value) =>
-      {
-         unchecked
+      public override int GetHashCode() => GetEqualityComponents()
+        .Aggregate(1, (current, value) =>
          {
-            return current * 23 + (value?.GetHashCode() ?? 0);
-         }
-      });
+            unchecked
+            {
+               return current * 23 + (value?.GetHashCode() ?? 0);
+            }
+         });
 
       public static bool operator ==(TValueType a, ValueType<TValueType> b) => a is null && b is null || !(a is null) && !(b is null) && a.Equals(b);
 

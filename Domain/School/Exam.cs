@@ -10,7 +10,7 @@ namespace Domain.School
       public string Value { get; set; }
    }
 
-   public interface IExam 
+   public interface IExam
    {
       ExamIdentifier Identifier { get; set; }
 

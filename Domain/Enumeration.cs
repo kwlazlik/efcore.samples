@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
-namespace Domain 
+namespace Domain
 {
    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
    public abstract class Enumeration<TEnumeration> where TEnumeration : Enumeration<TEnumeration>
