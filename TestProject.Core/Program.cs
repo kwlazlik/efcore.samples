@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using AutoMapper.Extensions.ExpressionMapping;
 using AutoMapper.QueryableExtensions;
 using DelegateDecompiler;
 using Domain.School;
