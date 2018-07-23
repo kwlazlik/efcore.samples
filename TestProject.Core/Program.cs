@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using AutoMapper;
 using AutoMapper.Extensions.ExpressionMapping;
 using AutoMapper.QueryableExtensions;
+using Common.Infrastructure.Specifications;
 using DelegateDecompiler;
 using Domain.School;
 using EFC;
 using EFC.Interception;
+using TestProject.Core.SpecificationTest;
 using TestProject.Core.ViewModels;
 
 namespace TestProject.Core
@@ -16,6 +19,8 @@ namespace TestProject.Core
    {
       private static void Main(string[] args)
       {
+         QueryWithSpecification();
+
          Mapper.Initialize(c =>
          {
             c.CreateMap<Student, StudentViewModel>();
@@ -32,6 +37,36 @@ namespace TestProject.Core
          UpdataingDataSample();
 
          QueryDataSamples();
+      }
+
+      private static void QueryWithSpecification()
+      {
+         HasTest[] tests =
+         {
+            new HasTest { Test = new Test() },
+            new HasTest { Test = new Test() },
+            new HasTest
+            {
+               Test = new Test
+                  { PropA = true }
+            },
+            new HasTest
+            {
+               Test = new Test
+               {
+                  PropA = true,
+                  PropB = true
+               }
+            }
+         };
+
+         List<HasTest> x = tests.AsQueryable().Where(new TestSpecification(new[] { "PropA" })).ToList();
+         List<HasTest> x2 = tests.AsQueryable().Where(new TestSpecification(new[] { "PropB" })).ToList();
+         List<HasTest> x2c = tests.AsQueryable().Where(new TestSpecification(new[] { "PropA" })).ToList();
+         List<HasTest> x2c3 = tests.AsQueryable().Where(new TestSpecification(new[] { "PropA" })).ToList();
+         List<HasTest> x2c33 = tests.AsQueryable().Where(new TestSpecification(new[] { "PropA" })).ToList();
+         List<HasTest> x2c333 = tests.AsQueryable().Where(new TestSpecification(new[] { "PropA" })).ToList();
+         List<HasTest> x2c3r33 = tests.AsQueryable().Where(new TestSpecification(new[] { "PropA" })).ToList();
       }
 
       private static void QueryDataSamples()
