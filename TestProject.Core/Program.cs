@@ -19,6 +19,8 @@ namespace TestProject.Core
    {
       private static void Main(string[] args)
       {
+         ProjectToVsUseAsDataSourceResult.ProjectToVsUseAsDataSourceResult.FlatViewModelsTest();
+
          QueryWithSpecification();
 
          Mapper.Initialize(c =>
@@ -30,6 +32,8 @@ namespace TestProject.Core
             c.IncludeSourceExtensionMethods(typeof(ExamExtension));
          });
 
+         Test();
+
          QueryViewMmodelsSamples();
 
          CustomEnumerationsSamples();
@@ -37,6 +41,11 @@ namespace TestProject.Core
          UpdataingDataSample();
 
          QueryDataSamples();
+      }
+
+      private static void Test()
+      {
+
       }
 
       private static void QueryWithSpecification()
