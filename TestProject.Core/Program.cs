@@ -6,6 +6,7 @@ using AutoMapper;
 using AutoMapper.Extensions.ExpressionMapping;
 using AutoMapper.QueryableExtensions;
 using Common.Infrastructure.Specifications;
+using Common.Results;
 using DelegateDecompiler;
 using Domain.School;
 using EFC;
@@ -15,6 +16,23 @@ using TestProject.Core.ViewModels;
 
 namespace TestProject.Core
 {
+   public class ResultTests
+   {
+      public Result<int> GetInt() => 1;
+
+      public void Test()
+      {
+         Result<string> result = GetInt()
+           .OnSuccessZip(i => i.ToString())
+           .OnSuccessZip((i, s) => i + int.Parse(s))
+           .OnSuccessUnzip((a, b, c) => a + b + c);
+
+
+         List<Result<int>> list = new List<Result<int>>();
+         Result<IEnumerable<int>> sa = list.Join();
+      }
+   }
+
    internal class Program
    {
       private static void Main(string[] args)

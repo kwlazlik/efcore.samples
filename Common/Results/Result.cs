@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Common.Results
 {
@@ -28,35 +26,6 @@ namespace Common.Results
       public static Result<TValue> Ok<TValue>(TValue value) => new Result<TValue>(value);
 
       public static Result<TValue> Fail<TValue>(string error) => new Result<TValue>(default, error);
-
-      public static Result<TValue, TError> Ok<TValue, TError>(TValue value) where TError : class => new Result<TValue, TError>(value);
-
-      public static Result<TValue, TError> Fail<TValue, TError>(TError error) where TError : class => new Result<TValue, TError>(default, error);
-
-      public static Result Combine(params Result[] results) => Combine(", ", results);
-
-      public static Result Combine<T>(params Result<T>[] results) => Combine(", ", results);
-
-      public static Result Combine(string errorMessagesSeparator, params Result[] results)
-      {
-         List<Result> failedResults = results.Where(x => x.IsFail).ToList();
-
-         if (!failedResults.Any())
-         {
-            return Ok();
-         }
-
-         string errorMessage = string.Join(errorMessagesSeparator, failedResults.Select(x => x.Error));
-
-         return Fail(errorMessage);
-      }
-
-      public static Result Combine<T>(string errorMessagesSeparator, params Result<T>[] results)
-      {
-         Result[] untyped = results.Select(result => (Result)result).ToArray();
-
-         return Combine(errorMessagesSeparator, untyped);
-      }
    }
 
    [Serializable]
@@ -75,11 +44,6 @@ namespace Common.Results
 
       internal Result(TValue value)
       {
-         if (value == null)
-         {
-            throw new ArgumentNullException(nameof(value));
-         }
-
          _value = value;
          _error = null;
       }
@@ -94,50 +58,10 @@ namespace Common.Results
 
       public static bool operator false(Result<TValue> result) => result.IsFail;
 
-      public static implicit operator Result(Result<TValue> result) => result ? Result.Ok() : Result.Fail(result.Error);
+      public static explicit operator Result(Result<TValue> result) => result ? Result.Ok() : Result.Fail(result.Error);
 
-      public static implicit operator Result<TValue, string>(Result<TValue> self) =>
-         self ? Result.Ok<TValue, string>(self.Value) : Result.Fail<TValue, string>(self.Error);
-   }
+      public static implicit operator Result<TValue>(TValue val) => Result.Ok(val);
 
-   [Serializable]
-   public struct Result<TValue, TError> where TError : class
-   {
-      private readonly TValue _value;
-      private readonly TError _error;
-
-      public TValue Value => IsOk ? _value : throw new InvalidOperationException("Can not get value for fail result.");
-
-      public TError Error => IsFail ? _error : throw new InvalidOperationException("Can not get error for ok result.");
-
-      public bool IsOk => _error == null;
-
-      public bool IsFail => !IsOk;
-
-      internal Result(TValue value)
-      {
-         if (value == null)
-         {
-            throw new ArgumentNullException(nameof(value));
-         }
-
-         _value = value;
-         _error = null;
-      }
-
-      internal Result(TValue value, TError error)
-      {
-         _value = value;
-         _error = error ?? throw new ArgumentNullException(nameof(error));
-      }
-
-      public static bool operator true(Result<TValue, TError> result) => result.IsOk;
-
-      public static bool operator false(Result<TValue, TError> result) => result.IsFail;
-
-      public static implicit operator Result(Result<TValue, TError> result) => result ? Result.Ok() : Result.Fail(result.Error.ToString());
-
-      public static implicit operator Result<TValue>(Result<TValue, TError> result) =>
-         result ? Result.Ok(result.Value) : Result.Fail<TValue>(result.Error.ToString());
+      public static explicit operator TValue(Result<TValue> result) => result.Value;
    }
 }

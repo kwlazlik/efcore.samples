@@ -10,9 +10,9 @@ namespace Common.Results
 
       public static Result OnSuccess(this Result result, Func<Result> func) => result ? func() : result;
 
-      public static Result<T> OnSuccess<T>(this Result result, Func<T> func) => result ? Result.Ok(func()) : Result.Fail<T>(result.Error);
+      public static Result<TA> OnSuccess<TA>(this Result result, Func<TA> func) => result ? func() : Result.Fail<TA>(result.Error);
 
-      public static Result<T> OnSuccess<T>(this Result result, Func<Result<T>> func) => result ? func() : Result.Fail<T>(result.Error);
+      public static Result<TA> OnSuccess<TA>(this Result result, Func<Result<TA>> func) => result ? func() : Result.Fail<TA>(result.Error);
 
       public static Result OnSuccess(this Result result, Action action)
       {
@@ -24,63 +24,23 @@ namespace Common.Results
          return result;
       }
 
-      public static Result OnFailure(this Result result, Action action)
-      {
-         if (result.IsFail)
-         {
-            action();
-         }
-
-         return result;
-      }
-
       public static Result OnFailure(this Result result, Action<string> action)
       {
-         if (result.IsFail)
+         if (result)
          {
-            action(result.Error);
+            return result;
          }
+
+         action(result.Error);
 
          return result;
       }
 
-      public static T OnBoth<T>(this Result result, Func<Result, T> func) => func(result);
+      // Result<TA>
 
-      public static Result OnBoth(this Result result, Action action)
+      public static Result<TA> OnSuccess<TA>(this Result<TA> result, Action action)
       {
-         action();
-
-         return result;
-      }
-
-      public static Result Ensure(this Result result, Func<bool> predicate, string errorMessage)
-      {
-         if (result.IsFail)
-         {
-            return Result.Fail(result.Error);
-         }
-
-         if (!predicate())
-         {
-            return Result.Fail(errorMessage);
-         }
-
-         return Result.Ok();
-      }
-
-      // Result<TValue>
-
-      public static Result OnSuccess<T>(this Result<T> result, Func<T, Result> func) => result ? func(result.Value) : Result.Fail(result.Error);
-
-      public static Result<K> OnSuccess<T, K>(this Result<T> result, Func<Result<K>> func) => result ? func() : Result.Fail<K>(result.Error);
-
-      public static Result<K> OnSuccess<T, K>(this Result<T> result, Func<T, K> func) => result ? Result.Ok(func(result.Value)) : Result.Fail<K>(result.Error);
-
-      public static Result<K> OnSuccess<T, K>(this Result<T> result, Func<T, Result<K>> func) => result ? func(result.Value) : Result.Fail<K>(result.Error);
-
-      public static Result<T> OnFailure<T>(this Result<T> result, Action action)
-      {
-         if (result.IsFail)
+         if (result)
          {
             action();
          }
@@ -88,40 +48,7 @@ namespace Common.Results
          return result;
       }
 
-      public static Result<T> OnFailure<T>(this Result<T> result, Action<string> action)
-      {
-         if (result.IsFail)
-         {
-            action(result.Error);
-         }
-
-         return result;
-      }
-
-      public static K OnBoth<T, K>(this Result<T> result, Func<Result<T>, K> func) => func(result);
-
-      public static Result<T> Ensure<T>(this Result<T> result, Func<T, bool> predicate, string errorMessage)
-      {
-         if (result.IsFail)
-         {
-            return Result.Fail<T>(result.Error);
-         }
-
-         if (!predicate(result.Value))
-         {
-            return Result.Fail<T>(errorMessage);
-         }
-
-         return Result.Ok(result.Value);
-      }
-
-      // Result<TValue, TError>
-
-      public static Result OnSuccess<TValue, TNewValue, TError>(this Result<TValue, TError> result,
-                                                                Func<TValue, Result> func) where TError : class =>
-         result ? func(result.Value) : Result.Fail<TNewValue, TError>(result.Error);
-
-      public static Result<T> OnSuccess<T>(this Result<T> result, Action<T> action)
+      public static Result<TA> OnSuccess<TA>(this Result<TA> result, Action<TA> action)
       {
          if (result)
          {
@@ -131,71 +58,108 @@ namespace Common.Results
          return result;
       }
 
-      public static Result<TNewValue, TError> OnSuccess<TValue, TNewValue, TError>(this Result<TValue, TError> result,
-                                                                                   Func<TValue, TNewValue> func) where TError : class =>
-         result ? Result.Ok<TNewValue, TError>(func(result.Value)) : Result.Fail<TNewValue, TError>(result.Error);
-
-      public static Result<TNewValue, TError> OnSuccess<TValue, TNewValue, TError>(this Result<TValue, TError> result,
-                                                                                   Func<TValue, Result<TNewValue, TError>> func) where TError : class =>
-         result.IsFail ? Result.Fail<TNewValue, TError>(result.Error) : func(result.Value);
-
-      public static Result<TNewValue, TError> OnSuccess<TValue, TNewValue, TError>(this Result<TValue, TError> result,
-                                                                                   Func<Result<TNewValue, TError>> func) where TError : class =>
-         result ? func() : Result.Fail<TNewValue, TError>(result.Error);
-
-      public static Result<TNewValue> OnSuccess<TValue, TNewValue, TError>(this Result<TValue, TError> result,
-                                                                           Func<TValue, Result<TNewValue>> func) where TError : class =>
-         result ? func(result.Value) : Result.Fail<TNewValue, TError>(result.Error);
-
-      public static Result<TValue, TError> OnSuccess<TValue, TError>(this Result<TValue, TError> result, Action<TValue> action) where TError : class
+      public static Result<TA> OnFailure<TA>(this Result<TA> result, Action<string> action)
       {
          if (result)
          {
-            action(result.Value);
+            return result;
+         }
+
+         action(result.Error);
+
+         return result;
+      }
+
+      public static Result<TB> OnSuccess<TA, TB>(this Result<TA> result, Func<TA, TB> func) => result ? func(result.Value) : Result.Fail<TB>(result.Error);
+
+      public static Result<TB> OnSuccess<TA, TB>(this Result<TA> result, Func<TA, Result<TB>> func) => result ? func(result.Value) : Result.Fail<TB>(result.Error);
+
+      public static Result<(TA, TB)> OnSuccessZip<TA, TB>(this Result<TA> result, Func<TA, TB> func) => result
+         ? (result.Value, func(result.Value))
+         : Result.Fail<(TA, TB)>(result.Error);
+
+      public static Result<(TA, TB)> OnSuccessZip<TA, TB>(this Result<TA> resultA, Func<TA, Result<TB>> func)
+      {
+         if (resultA)
+         {
+            Result<TB> resultB = func(resultA.Value);
+
+            return resultB ? (resultA.Value, resultB.Value) : Result.Fail<(TA, TB)>(resultB.Error);
+         }
+
+         return Result.Fail<(TA, TB)>(resultA.Error);
+      }
+
+      // Result<(TA, TB)>
+
+      public static Result<(TA, TB)> OnSuccess<TA, TB>(this Result<(TA, TB)> result, Action<TA, TB> action)
+      {
+         if (result)
+         {
+            action(result.Value.Item1, result.Value.Item2);
          }
 
          return result;
       }
 
-      public static Result<TValue, TError> OnFailure<TValue, TError>(this Result<TValue, TError> result,
-                                                                     Action action) where TError : class
+      public static Result<(TA, TB, TC)> OnSuccessZip<TA, TB, TC>(this Result<(TA, TB)> result, Func<TA, TB, TC> func) => result
+         ? (result.Value.Item1, result.Value.Item2, func(result.Value.Item1, result.Value.Item2))
+         : Result.Fail<(TA, TB, TC)>(result.Error);
+
+      public static Result<(TA, TB, TC)> OnSuccessZip<TA, TB, TC>(this Result<(TA, TB)> resultAB, Func<TA, TB, Result<TC>> func)
       {
-         if (result.IsFail)
+         if (resultAB)
          {
-            action();
+            Result<TC> resultC = func(resultAB.Value.Item1, resultAB.Value.Item2);
+
+            return resultC ? (resultAB.Value.Item1, resultAB.Value.Item2, resultC.Value) : Result.Fail<(TA, TB, TC)>(resultC.Error);
+         }
+
+         return Result.Fail<(TA, TB, TC)>(resultAB.Error);
+      }
+
+      public static Result<TC> OnSuccessUnzip<TA, TB, TC>(this Result<(TA, TB)> result, Func<TA, TB, TC> func) => result
+         ? func(result.Value.Item1, result.Value.Item2)
+         : Result.Fail<TC>(result.Error);
+
+      public static Result<TC> OnSuccessUnzip<TA, TB, TC>(this Result<(TA, TB)> result, Func<TA, TB, Result<TC>> func) => result
+         ? func(result.Value.Item1, result.Value.Item2)
+         : Result.Fail<TC>(result.Error);
+
+      // Result<(TA, TB, TC)>
+
+      public static Result<(TA, TB, TC)> OnSuccess<TA, TB, TC>(this Result<(TA, TB, TC)> result, Action<TA, TB, TC> action)
+      {
+         if (result)
+         {
+            action(result.Value.Item1, result.Value.Item2, result.Value.Item3);
          }
 
          return result;
       }
 
-      public static Result<TValue, TError> OnFailure<TValue, TError>(this Result<TValue, TError> result,
-                                                                     Action<TError> action) where TError : class
+      public static Result<(TA, TB, TC, TD)> OnSuccessZip<TA, TB, TC, TD>(this Result<(TA, TB, TC)> result, Func<TA, TB, TC, TD> func) => result
+         ? (result.Value.Item1, result.Value.Item2, result.Value.Item3, func(result.Value.Item1, result.Value.Item2, result.Value.Item3))
+         : Result.Fail<(TA, TB, TC, TD)>(result.Error);
+
+      public static Result<(TA, TB, TC, TD)> OnSuccessZip<TA, TB, TC, TD>(this Result<(TA, TB, TC)> resultABC, Func<TA, TB, TC, Result<TD>> func)
       {
-         if (result.IsFail)
+         if (resultABC)
          {
-            action(result.Error);
+            Result<TD> resultD = func(resultABC.Value.Item1, resultABC.Value.Item2, resultABC.Value.Item3);
+
+            return resultABC ? (resultABC.Value.Item1, resultABC.Value.Item2, resultABC.Value.Item3, resultD.Value) : Result.Fail<(TA, TB, TC, TD)>(resultABC.Error);
          }
 
-         return result;
+         return Result.Fail<(TA, TB, TC, TD)>(resultABC.Error);
       }
 
-      public static TValue OnBoth<TValue, TError>(this Result<TValue, TError> result,
-                                                  Func<Result<TValue, TError>, TValue> func) where TError : class => func(result);
+      public static Result<TD> OnSuccessUnzip<TA, TB, TC, TD>(this Result<(TA, TB, TC)> result, Func<TA, TB, TC, TD> func) => result
+         ? func(result.Value.Item1, result.Value.Item2, result.Value.Item3)
+         : Result.Fail<TD>(result.Error);
 
-      public static Result<TValue, TError> Ensure<TValue, TError>(this Result<TValue, TError> result,
-                                                                  Func<TValue, bool> predicate, TError errorObject) where TError : class
-      {
-         if (result.IsFail)
-         {
-            return Result.Fail<TValue, TError>(result.Error);
-         }
-
-         if (!predicate(result.Value))
-         {
-            return Result.Fail<TValue, TError>(errorObject);
-         }
-
-         return Result.Ok<TValue, TError>(result.Value);
-      }
+      public static Result<TD> OnSuccessUnzip<TA, TB, TC, TD>(this Result<(TA, TB, TC)> result, Func<TA, TB, TC, Result<TD>> func) => result
+         ? func(result.Value.Item1, result.Value.Item2, result.Value.Item3)
+         : Result.Fail<TD>(result.Error);
    }
 }
